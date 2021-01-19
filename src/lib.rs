@@ -5,6 +5,7 @@ use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use sppparse::{Sparsable, SparsableTrait, SparseError, SparseSelector};
 
 mod operators;
+mod schemas;
 
 // #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
 // #[getset(get = "pub")]

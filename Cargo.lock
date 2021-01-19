@@ -48,6 +48,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "httpstatus"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbcf281a2062fc93deb46c99bd072cda6888a560c8a4f223d6824c1128832002"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "itoa"
 version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -70,6 +79,7 @@ name = "oapi"
 version = "0.1.0"
 dependencies = [
  "getset",
+ "httpstatus",
  "serde",
  "sppparse",
 ]
