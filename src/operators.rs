@@ -3,6 +3,7 @@ use sppparse::{SparsePointer, SparseValue};
 
 pub trait OApiOperator<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
     fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError>;
+    fn new(val: Vec<OperatorSelector<T>>) -> Self;
 }
 
 macro_rules! OApiOperatorImpl {
@@ -18,6 +19,10 @@ macro_rules! OApiOperatorImpl {
                     res.append(&mut v.get()?);
                 }
                 Ok(res)
+            }
+
+            fn new(val: Vec<OperatorSelector<T>>) -> Self {
+                $struct_name { root: val }
             }
         }
     };
@@ -71,7 +76,7 @@ pub enum OperatorSelector<T: 'static + Serialize + DeserializeOwned + SparsableT
     Val(SparseSelector<T>),
 }
 
-impl<T> OApiOperator<T> for OperatorSelector<T>
+impl<T> OperatorSelector<T>
 where
     T: 'static + Serialize + DeserializeOwned + SparsableTrait,
 {
