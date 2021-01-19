@@ -1,0 +1,25 @@
+default:
+  image: registry.gitlab.com/basiliq/dockerfiles
+
+stages:
+  - test
+
+build_and_test_rust:
+  stage: test
+  before_script:
+    - mkdir -p .git/hooks
+    - export NAME=sparse
+  script:
+    - cargo fmt -- --check
+    - cargo clippy -- -D warnings
+    - cargo build --all-targets
+    - cargo test
+  after_script:
+    - for file in $(find target/debug/deps -executable -name "$(basename oapi)-*");
+      do
+        echo "Running $file";
+        mkdir -p "target/cov/$(basename $file)";
+        cp $file $(basename $file);
+        kcov "target/cov/$(basename $file)" --exclude-pattern="/.cargo,/usr/lib,$PWD/oapi/src/tests" $(basename $file);
+      done
+    - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -s target/cov

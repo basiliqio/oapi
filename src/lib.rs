@@ -1,9 +1,8 @@
+#![warn(clippy::all)]
+
 use getset::Getters;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use sppparse::{Sparsable, SparsableTrait, SparseError, SparseSelector};
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::BufReader;
 
 mod operators;
 

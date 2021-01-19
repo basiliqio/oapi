@@ -2,7 +2,7 @@ use super::*;
 use sppparse::{SparsePointer, SparseValue};
 
 pub trait OApiOperator<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
-    fn get<'a>(&'a self) -> Result<Vec<SparseValue<'a, T>>, SparseError>;
+    fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError>;
 }
 
 macro_rules! OApiOperatorImpl {
@@ -11,7 +11,7 @@ macro_rules! OApiOperatorImpl {
         where
             T: 'static + Serialize + DeserializeOwned + SparsableTrait,
         {
-            fn get<'a>(&'a self) -> Result<Vec<SparseValue<'a, T>>, SparseError> {
+            fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
                 let mut res: Vec<SparseValue<T>> = Vec::new();
 
                 for v in self.root().iter() {
@@ -75,7 +75,7 @@ impl<T> OApiOperator<T> for OperatorSelector<T>
 where
     T: 'static + Serialize + DeserializeOwned + SparsableTrait,
 {
-    fn get<'a>(&'a self) -> Result<Vec<SparseValue<'a, T>>, SparseError> {
+    fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
         match self {
             OperatorSelector::AnyOf(x) => x.get(),
             OperatorSelector::OneOf(x) => x.get(),
