@@ -1,8 +1,6 @@
 use super::*;
-use std::collections::HashMap;
-use url::Url;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiRoot {
@@ -16,7 +14,7 @@ pub struct OApiRoot {
     external_docs: Option<OApiExternalDocumentation>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiInfo {
@@ -28,7 +26,7 @@ pub struct OApiInfo {
     version: String,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiContact {
@@ -37,7 +35,7 @@ pub struct OApiContact {
     email: Option<String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiLicense {
@@ -45,7 +43,7 @@ pub struct OApiLicense {
     url: Option<Url>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiServer {
@@ -54,7 +52,7 @@ pub struct OApiServer {
     variables: HashMap<String, OApiServerVariable>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiServerVariable {
@@ -66,11 +64,11 @@ pub struct OApiServerVariable {
 
 type OApiCallback = HashMap<String, OApiPathItem>;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiComponents {
-    schemas: HashMap<String, String>, //FIXME JSONSCHEMA
+    schemas: HashMap<String, OApiSchema>,
     responses: HashMap<String, OApiResponse>,
     parameters: HashMap<String, OApiParameter>,
     examples: HashMap<String, OApiExampleSelector>,
@@ -81,7 +79,7 @@ pub struct OApiComponents {
     callbacks: HashMap<String, OApiCallback>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiPathItem {
@@ -99,7 +97,7 @@ pub struct OApiPathItem {
     parameters: Vec<OApiParameter>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOperation {
@@ -117,7 +115,7 @@ pub struct OApiOperation {
     servers: Vec<OApiServer>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiExternalDocumentation {
@@ -125,7 +123,7 @@ pub struct OApiExternalDocumentation {
     description: Option<String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiParameterLocation {
     Query,
@@ -134,21 +132,21 @@ pub enum OApiParameterLocation {
     Cookie,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiParameterStyle {
     Form,
     Simple,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiExampleSelector {
-    Single(String), //FIXME VALUE
+    Single(OApiExample),
     Multiple(Vec<OApiExample>),
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiParameter {
@@ -162,31 +160,31 @@ pub struct OApiParameter {
     style: Option<OApiParameterStyle>,
     explode: Option<bool>,
     allow_reserved: Option<bool>,
-    schema: Option<String>, //FIXME JSONSCHEMA
+    schema: Option<OApiSchema>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiRequestBody {
     description: Option<String>,
-    content: HashMap<String, OApiMediaType>, //FIXME JSONSCHEMA
+    content: HashMap<String, OApiMediaType>,
     required: bool,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiMediaType {
-    schema: Option<String>, //FIXME JSONSCHEMA
+    schema: Option<OApiSchema>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
     encoding: HashMap<String, OApiEncoding>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiEncoding {
@@ -197,7 +195,7 @@ pub struct OApiEncoding {
     allow_reserved: bool,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiResponse {
@@ -207,17 +205,17 @@ pub struct OApiResponse {
     links: HashMap<String, OApiLink>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiExample {
     summary: Option<String>,
     description: Option<String>,
-    value: Option<String>, //FIXME Value
+    value: Option<Value>,
     external_value: Option<String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiLink {
@@ -229,7 +227,7 @@ pub struct OApiLink {
     server: Option<OApiServer>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiHeader {
@@ -240,12 +238,12 @@ pub struct OApiHeader {
     style: Option<OApiParameterStyle>,
     explode: Option<bool>,
     allow_reserved: Option<bool>,
-    schema: Option<String>, //FIXME JSONSCHEMA
+    schema: Option<OApiSchema>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiTag {
@@ -254,7 +252,7 @@ pub struct OApiTag {
     external_docs: Option<OApiExternalDocumentation>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiDiscriminator {
@@ -262,7 +260,7 @@ pub struct OApiDiscriminator {
     mapping: HashMap<String, String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "type")]
 pub enum OApiSecurityScheme {
@@ -272,7 +270,7 @@ pub enum OApiSecurityScheme {
     OpenIdConnect(OApiSecurityOpenIdConnect),
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiApiKeyLocation {
     Query,
@@ -280,7 +278,7 @@ pub enum OApiApiKeyLocation {
     Cookie,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecuritySchemeApiKey {
@@ -290,7 +288,7 @@ pub struct OApiSecuritySchemeApiKey {
     in_: OApiApiKeyLocation,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecuritySchemeHttp {
@@ -299,7 +297,7 @@ pub struct OApiSecuritySchemeHttp {
     bearer_format: Option<String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecurityOauth2 {
@@ -307,7 +305,7 @@ pub struct OApiSecurityOauth2 {
     flows: OApiOAuthFlow,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecurityOpenIdConnect {
@@ -316,7 +314,7 @@ pub struct OApiSecurityOpenIdConnect {
     openid_connect_url: Url,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlow {
@@ -326,7 +324,7 @@ pub struct OApiOAuthFlow {
     authorization_code: Option<OApiOAuthFlowAuthorizationCode>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowImplicit {
@@ -335,7 +333,7 @@ pub struct OApiOAuthFlowImplicit {
     scopes: HashMap<String, String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowPassword {
@@ -344,7 +342,7 @@ pub struct OApiOAuthFlowPassword {
     scopes: HashMap<String, String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowClientCredentials {
@@ -353,7 +351,7 @@ pub struct OApiOAuthFlowClientCredentials {
     scopes: HashMap<String, String>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowAuthorizationCode {

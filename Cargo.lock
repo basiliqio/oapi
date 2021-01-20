@@ -108,6 +108,7 @@ dependencies = [
  "getset",
  "httpstatus",
  "serde",
+ "serde_json",
  "sppparse",
  "url",
 ]
@@ -287,9 +288,8 @@ dependencies = [
 
 [[package]]
 name = "sppparse"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea059c360f6ac900a8ac7215df758e1e655910ee3f075227092d134af50b9521"
+version = "0.1.1"
+source = "git+ssh://git@gitlab.com/basiliq/sppparse.git#e93261c7feb9dba1da39acb9d6c1fd5b75c27303"
 dependencies = [
  "auto_impl",
  "getset",
@@ -301,13 +301,13 @@ dependencies = [
  "serde_yaml",
  "sppparse_derive",
  "thiserror",
+ "url",
 ]
 
 [[package]]
 name = "sppparse_derive"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89ab4e96400163a197bd6b119bb3864ec16bc8eb87c214c40721e73c8e60842d"
+source = "git+ssh://git@gitlab.com/basiliq/sppparse.git#e93261c7feb9dba1da39acb9d6c1fd5b75c27303"
 dependencies = [
  "proc-macro2",
  "quote",
