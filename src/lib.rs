@@ -3,7 +3,7 @@
 use getset::Getters;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::Value;
-use sppparse::{Sparsable, SparsableTrait, SparseError, SparseSelector};
+use sppparse::{Sparsable, SparsableTrait, SparseError, SparsePointedValue, SparseSelector};
 use std::collections::HashMap;
 use url::Url;
 

@@ -113,7 +113,7 @@ where
         + std::fmt::Debug
         + PartialEq,
 {
-    fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
+    pub fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
         match self {
             OperatorSelector::AnyOf(x) => x.get(),
             OperatorSelector::OneOf(x) => x.get(),
@@ -121,6 +121,10 @@ where
             OperatorSelector::Not(x) => x.get(),
             OperatorSelector::Val(x) => Ok(vec![x.get()?]),
         }
+    }
+
+    pub fn new_from_val(val: T) -> Self {
+        OperatorSelector::Val(SparseSelector::Obj(SparsePointedValue::Obj(val)))
     }
 }
 

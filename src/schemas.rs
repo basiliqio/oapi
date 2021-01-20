@@ -5,51 +5,51 @@ use super::*;
 #[serde(rename_all = "camelCase")]
 pub struct OApiDocument {
     openapi: OperatorSelector<String>,
-    info: Option<OApiInfo>,
-    servers: Option<OApiServer>,
-    path: HashMap<String, OApiPathItem>,
-    components: Option<OApiComponents>,
-    security: HashMap<String, OApiSecurityScheme>,
-    tags: Vec<OApiTag>,
-    external_docs: Option<OApiExternalDocumentation>,
+    info: OperatorSelector<OApiInfo>,
+    servers: Option<OperatorSelector<OApiServer>>,
+    path: OperatorSelector<HashMap<String, OperatorSelector<OApiPathItem>>>,
+    components: Option<OperatorSelector<OApiComponents>>,
+    security: OperatorSelector<HashMap<String, OperatorSelector<OApiSecurityScheme>>>,
+    tags: Option<OperatorSelector<Vec<OperatorSelector<OApiTag>>>>,
+    external_docs: Option<OperatorSelector<OApiExternalDocumentation>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiInfo {
-    title: String,
-    description: Option<String>,
-    terms_of_services: Option<String>,
-    contact: Option<OApiContact>,
-    license: Option<OApiLicense>,
-    version: String,
+    title: OperatorSelector<String>,
+    description: Option<OperatorSelector<String>>,
+    terms_of_services: Option<OperatorSelector<String>>,
+    contact: Option<OperatorSelector<OApiContact>>,
+    license: Option<OperatorSelector<OApiLicense>>,
+    version: OperatorSelector<String>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiContact {
-    name: Option<String>,
-    url: Option<Url>,
-    email: Option<String>,
+    name: Option<OperatorSelector<String>>,
+    url: Option<OperatorSelector<Url>>,
+    email: Option<OperatorSelector<String>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiLicense {
-    name: String,
-    url: Option<Url>,
+    name: OperatorSelector<String>,
+    url: Option<OperatorSelector<Url>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiServer {
-    url: Url,
-    description: Option<String>,
-    variables: HashMap<String, OApiServerVariable>,
+    url: OperatorSelector<Url>,
+    description: Option<OperatorSelector<String>>,
+    variables: HashMap<String, OperatorSelector<OApiServerVariable>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
@@ -57,9 +57,9 @@ pub struct OApiServer {
 #[serde(rename_all = "camelCase")]
 pub struct OApiServerVariable {
     #[serde(rename = "enum")]
-    enum_: Vec<String>,
-    default: String,
-    description: Option<String>,
+    enum_: OperatorSelector<Vec<OperatorSelector<String>>>,
+    default: OperatorSelector<String>,
+    description: Option<OperatorSelector<String>>,
 }
 
 type OApiCallback = HashMap<String, OApiPathItem>;
@@ -68,59 +68,59 @@ type OApiCallback = HashMap<String, OApiPathItem>;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiComponents {
-    schemas: HashMap<String, OApiSchema>,
-    responses: HashMap<String, OApiResponse>,
-    parameters: HashMap<String, OApiParameter>,
-    examples: HashMap<String, OApiExampleSelector>,
-    request_bodies: HashMap<String, OApiRequestBody>,
-    headers: HashMap<String, OApiHeader>,
-    security_schemes: HashMap<String, OApiSecurityScheme>,
-    links: HashMap<String, OApiLink>,
-    callbacks: HashMap<String, OApiCallback>,
+    schemas: OperatorSelector<HashMap<String, OperatorSelector<OApiSchema>>>,
+    responses: OperatorSelector<HashMap<String, OperatorSelector<OApiResponse>>>,
+    parameters: OperatorSelector<HashMap<String, OperatorSelector<OApiParameter>>>,
+    examples: OperatorSelector<HashMap<String, OperatorSelector<OApiExampleSelector>>>,
+    request_bodies: OperatorSelector<HashMap<String, OperatorSelector<OApiRequestBody>>>,
+    headers: OperatorSelector<HashMap<String, OperatorSelector<OApiHeader>>>,
+    security_schemes: OperatorSelector<HashMap<String, OperatorSelector<OApiSecurityScheme>>>,
+    links: OperatorSelector<HashMap<String, OperatorSelector<OApiLink>>>,
+    callbacks: OperatorSelector<HashMap<String, OperatorSelector<OApiCallback>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiPathItem {
-    summary: Option<String>,
-    description: Option<String>,
-    get: Option<OApiOperation>,
-    put: Option<OApiOperation>,
-    post: Option<OApiOperation>,
-    delete: Option<OApiOperation>,
-    options: Option<OApiOperation>,
-    patch: Option<OApiOperation>,
-    head: Option<OApiOperation>,
-    trace: Option<OApiOperation>,
-    servers: Vec<OApiServer>,
-    parameters: Vec<OApiParameter>,
+    summary: Option<OperatorSelector<String>>,
+    description: Option<OperatorSelector<String>>,
+    get: Option<OperatorSelector<OApiOperation>>,
+    put: Option<OperatorSelector<OApiOperation>>,
+    post: Option<OperatorSelector<OApiOperation>>,
+    delete: Option<OperatorSelector<OApiOperation>>,
+    options: Option<OperatorSelector<OApiOperation>>,
+    patch: Option<OperatorSelector<OApiOperation>>,
+    head: Option<OperatorSelector<OApiOperation>>,
+    trace: Option<OperatorSelector<OApiOperation>>,
+    servers: OperatorSelector<Vec<OperatorSelector<OApiServer>>>,
+    parameters: OperatorSelector<Vec<OperatorSelector<OApiParameter>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOperation {
-    tags: Vec<String>,
-    summary: Option<String>,
-    description: Option<String>,
-    external_docs: Option<OApiExternalDocumentation>,
-    operation_id: Option<String>,
-    parameters: Option<Vec<OApiParameter>>,
-    request_body: Option<OApiRequestBody>,
-    responses: HashMap<String, OApiResponse>,
-    callbacks: HashMap<String, OApiCallback>,
-    deprecated: bool,
-    security: HashMap<String, Vec<String>>,
-    servers: Vec<OApiServer>,
+    tags: OperatorSelector<Vec<OperatorSelector<String>>>,
+    summary: Option<OperatorSelector<String>>,
+    description: Option<OperatorSelector<String>>,
+    external_docs: Option<OperatorSelector<OApiExternalDocumentation>>,
+    operation_id: Option<OperatorSelector<String>>,
+    parameters: Option<OperatorSelector<Vec<OperatorSelector<OApiParameter>>>>,
+    request_body: Option<OperatorSelector<OApiRequestBody>>,
+    responses: OperatorSelector<HashMap<String, OperatorSelector<OApiResponse>>>,
+    callbacks: OperatorSelector<HashMap<String, OperatorSelector<OApiCallback>>>,
+    deprecated: OperatorSelector<bool>,
+    security: OperatorSelector<HashMap<String, OperatorSelector<Vec<OperatorSelector<String>>>>>,
+    servers: OperatorSelector<Vec<OperatorSelector<OApiServer>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiExternalDocumentation {
-    url: Url,
-    description: Option<String>,
+    url: OperatorSelector<Url>,
+    description: Option<OperatorSelector<String>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
@@ -142,132 +142,132 @@ pub enum OApiParameterStyle {
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiExampleSelector {
-    Single(OApiExample),
-    Multiple(Vec<OApiExample>),
+    Single(OperatorSelector<OApiExample>),
+    Multiple(OperatorSelector<Vec<OperatorSelector<OApiExample>>>),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiParameter {
-    name: String,
+    name: OperatorSelector<String>,
     #[serde(rename = "in")]
-    in_: OApiParameterLocation,
-    description: Option<String>,
-    required: bool,
-    deprecated: bool,
-    allow_empty_value: bool,
-    style: Option<OApiParameterStyle>,
-    explode: Option<bool>,
-    allow_reserved: Option<bool>,
-    schema: Option<OApiSchema>,
+    in_: OperatorSelector<OApiParameterLocation>,
+    description: Option<OperatorSelector<String>>,
+    required: OperatorSelector<bool>,
+    deprecated: OperatorSelector<bool>,
+    allow_empty_value: OperatorSelector<bool>,
+    style: Option<OperatorSelector<OApiParameterStyle>>,
+    explode: Option<OperatorSelector<bool>>,
+    allow_reserved: Option<OperatorSelector<bool>>,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector>,
+    example: Option<OperatorSelector<OApiExampleSelector>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiRequestBody {
-    description: Option<String>,
-    content: HashMap<String, OApiMediaType>,
-    required: bool,
+    description: Option<OperatorSelector<String>>,
+    content: OperatorSelector<HashMap<String, OperatorSelector<OApiMediaType>>>,
+    required: OperatorSelector<bool>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiMediaType {
-    schema: Option<OApiSchema>,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector>,
-    encoding: HashMap<String, OApiEncoding>,
+    example: Option<OperatorSelector<OApiExampleSelector>>,
+    encoding: OperatorSelector<HashMap<String, OperatorSelector<OApiEncoding>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiEncoding {
-    content_type: Option<String>,
-    headers: HashMap<String, OApiHeader>,
-    style: Option<String>,
-    explode: bool,
-    allow_reserved: bool,
+    content_type: Option<OperatorSelector<String>>,
+    headers: OperatorSelector<HashMap<String, OperatorSelector<OApiHeader>>>,
+    style: Option<OperatorSelector<String>>,
+    explode: OperatorSelector<bool>,
+    allow_reserved: OperatorSelector<bool>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiResponse {
-    description: String,
-    headers: HashMap<String, OApiHeader>,
-    content: HashMap<String, OApiMediaType>,
-    links: HashMap<String, OApiLink>,
+    description: OperatorSelector<String>,
+    headers: OperatorSelector<HashMap<String, OperatorSelector<OApiHeader>>>,
+    content: OperatorSelector<HashMap<String, OperatorSelector<OApiMediaType>>>,
+    links: OperatorSelector<HashMap<String, OperatorSelector<OApiLink>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiExample {
-    summary: Option<String>,
-    description: Option<String>,
-    value: Option<Value>,
-    external_value: Option<String>,
+    summary: Option<OperatorSelector<String>>,
+    description: Option<OperatorSelector<String>>,
+    value: Option<OperatorSelector<Value>>,
+    external_value: Option<OperatorSelector<String>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiLink {
-    operation_ref: Option<String>,
-    operation_id: Option<String>,
-    parameters: HashMap<String, String>,
-    request_body: Option<String>,
-    description: Option<String>,
-    server: Option<OApiServer>,
+    operation_ref: Option<OperatorSelector<String>>,
+    operation_id: Option<OperatorSelector<String>>,
+    parameters: OperatorSelector<HashMap<String, OperatorSelector<String>>>,
+    request_body: Option<OperatorSelector<String>>,
+    description: Option<OperatorSelector<String>>,
+    server: Option<OperatorSelector<OApiServer>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiHeader {
-    description: Option<String>,
-    required: bool,
-    deprecated: bool,
-    allow_empty_value: bool,
-    style: Option<OApiParameterStyle>,
-    explode: Option<bool>,
-    allow_reserved: Option<bool>,
-    schema: Option<OApiSchema>,
+    description: Option<OperatorSelector<String>>,
+    required: OperatorSelector<bool>,
+    deprecated: OperatorSelector<bool>,
+    allow_empty_value: OperatorSelector<bool>,
+    style: Option<OperatorSelector<OApiParameterStyle>>,
+    explode: Option<OperatorSelector<bool>>,
+    allow_reserved: Option<OperatorSelector<bool>>,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector>,
+    example: Option<OperatorSelector<OApiExampleSelector>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiTag {
-    name: String,
-    description: Option<String>,
-    external_docs: Option<OApiExternalDocumentation>,
+    name: OperatorSelector<String>,
+    description: Option<OperatorSelector<String>>,
+    external_docs: Option<OperatorSelector<OApiExternalDocumentation>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiDiscriminator {
-    property_name: String,
-    mapping: HashMap<String, String>,
+    property_name: OperatorSelector<String>,
+    mapping: OperatorSelector<HashMap<String, OperatorSelector<String>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "type")]
 pub enum OApiSecurityScheme {
-    ApiKey(OApiSecuritySchemeApiKey),
-    Http(OApiSecuritySchemeHttp),
-    Oauth2(Box<OApiSecurityOauth2>), // Boxed to reduce the size of the enum
-    OpenIdConnect(OApiSecurityOpenIdConnect),
+    ApiKey(OperatorSelector<OApiSecuritySchemeApiKey>),
+    Http(OperatorSelector<OApiSecuritySchemeHttp>),
+    Oauth2(Box<OperatorSelector<OApiSecurityOauth2>>), // Boxed to reduce the size of the enum
+    OpenIdConnect(OperatorSelector<OApiSecurityOpenIdConnect>),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
@@ -282,81 +282,81 @@ pub enum OApiApiKeyLocation {
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecuritySchemeApiKey {
-    description: Option<String>,
-    name: String,
+    description: Option<OperatorSelector<String>>,
+    name: OperatorSelector<String>,
     #[serde(rename = "in")]
-    in_: OApiApiKeyLocation,
+    in_: OperatorSelector<OApiApiKeyLocation>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecuritySchemeHttp {
-    description: Option<String>,
-    scheme: String,
-    bearer_format: Option<String>,
+    description: Option<OperatorSelector<String>>,
+    scheme: OperatorSelector<String>,
+    bearer_format: Option<OperatorSelector<String>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecurityOauth2 {
-    description: Option<String>,
-    flows: OApiOAuthFlow,
+    description: Option<OperatorSelector<String>>,
+    flows: OperatorSelector<OApiOAuthFlow>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecurityOpenIdConnect {
-    description: Option<String>,
+    description: Option<OperatorSelector<String>>,
     #[serde(rename = "openIdConnectUrl")]
-    openid_connect_url: Url,
+    openid_connect_url: OperatorSelector<Url>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlow {
-    implicit: Option<OApiOAuthFlowImplicit>,
-    password: Option<OApiOAuthFlowPassword>,
-    client_credentials: Option<OApiOAuthFlowClientCredentials>,
-    authorization_code: Option<OApiOAuthFlowAuthorizationCode>,
+    implicit: Option<OperatorSelector<OApiOAuthFlowImplicit>>,
+    password: Option<OperatorSelector<OApiOAuthFlowPassword>>,
+    client_credentials: Option<OperatorSelector<OApiOAuthFlowClientCredentials>>,
+    authorization_code: Option<OperatorSelector<OApiOAuthFlowAuthorizationCode>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowImplicit {
-    authorization_url: Url,
-    refresh_url: Option<String>,
-    scopes: HashMap<String, String>,
+    authorization_url: OperatorSelector<Url>,
+    refresh_url: Option<OperatorSelector<String>>,
+    scopes: OperatorSelector<HashMap<String, OperatorSelector<String>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowPassword {
-    token_url: Url,
-    refresh_url: Option<Url>,
-    scopes: HashMap<String, String>,
+    token_url: OperatorSelector<Url>,
+    refresh_url: Option<OperatorSelector<Url>>,
+    scopes: OperatorSelector<HashMap<String, OperatorSelector<String>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowClientCredentials {
-    token_url: Url,
-    refresh_url: Option<Url>,
-    scopes: HashMap<String, String>,
+    token_url: OperatorSelector<Url>,
+    refresh_url: Option<OperatorSelector<Url>>,
+    scopes: OperatorSelector<HashMap<String, OperatorSelector<String>>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlowAuthorizationCode {
-    authorization_url: Url,
-    token_url: Url,
-    refresh_url: Option<Url>,
-    scopes: HashMap<String, String>,
+    authorization_url: OperatorSelector<Url>,
+    token_url: OperatorSelector<Url>,
+    refresh_url: Option<OperatorSelector<Url>>,
+    scopes: OperatorSelector<HashMap<String, OperatorSelector<String>>>,
 }
