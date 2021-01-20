@@ -1,5 +1,6 @@
 use super::*;
 use std::collections::HashMap;
+use url::Url;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
 #[getset(get = "pub")]
@@ -8,11 +9,11 @@ pub struct OApiRoot {
     openapi: String,
     info: Option<OApiInfo>,
     servers: Option<OApiServer>,
-    path: String,          //FIXME
-    components: String,    //FIXME
-    security: Vec<String>, //FIXME
-    tags: Vec<String>,     //FIXME
-    external_docs: String, // FIXME
+    path: HashMap<String, OApiPathItem>,
+    components: Option<OApiComponents>,
+    security: HashMap<String, OApiSecurityScheme>,
+    tags: Vec<OApiTag>,
+    external_docs: Option<OApiExternalDocumentation>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -32,8 +33,8 @@ pub struct OApiInfo {
 #[serde(rename_all = "camelCase")]
 pub struct OApiContact {
     name: Option<String>,
-    url: Option<String>,   //TODO Parse url
-    email: Option<String>, // Parse email
+    url: Option<Url>,
+    email: Option<String>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -41,14 +42,14 @@ pub struct OApiContact {
 #[serde(rename_all = "camelCase")]
 pub struct OApiLicense {
     name: String,
-    url: Option<String>, //TODO Parse url
+    url: Option<Url>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiServer {
-    url: String,
+    url: Url,
     description: Option<String>,
     variables: HashMap<String, OApiServerVariable>,
 }
@@ -63,19 +64,21 @@ pub struct OApiServerVariable {
     description: Option<String>,
 }
 
+type OApiCallback = HashMap<String, OApiPathItem>;
+
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiComponents {
-    schemas: HashMap<String, String>,          //FIXME
-    responses: HashMap<String, String>,        //FIXME
-    parameters: HashMap<String, String>,       //FIXME
-    examples: HashMap<String, String>,         //FIXME
-    request_bodies: HashMap<String, String>,   //FIXME
-    headers: HashMap<String, String>,          //FIXME
-    security_schemes: HashMap<String, String>, //FIXME
-    links: HashMap<String, String>,            //FIXME
-    callbacks: HashMap<String, String>,        //FIXME
+    schemas: HashMap<String, String>, //FIXME JSONSCHEMA
+    responses: HashMap<String, OApiResponse>,
+    parameters: HashMap<String, OApiParameter>,
+    examples: HashMap<String, OApiExampleSelector>,
+    request_bodies: HashMap<String, OApiRequestBody>,
+    headers: HashMap<String, OApiHeader>,
+    security_schemes: HashMap<String, OApiSecurityScheme>,
+    links: HashMap<String, OApiLink>,
+    callbacks: HashMap<String, OApiCallback>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -84,16 +87,16 @@ pub struct OApiComponents {
 pub struct OApiPathItem {
     summary: Option<String>,
     description: Option<String>,
-    get: Option<OApiOperation>,     //FIXME
-    put: Option<OApiOperation>,     //FIXME
-    post: Option<OApiOperation>,    //FIXME
-    delete: Option<OApiOperation>,  //FIXME
-    options: Option<OApiOperation>, //FIXME
-    patch: Option<OApiOperation>,   //FIXME
-    head: Option<OApiOperation>,    //FIXME
-    trace: Option<OApiOperation>,   //FIXME
+    get: Option<OApiOperation>,
+    put: Option<OApiOperation>,
+    post: Option<OApiOperation>,
+    delete: Option<OApiOperation>,
+    options: Option<OApiOperation>,
+    patch: Option<OApiOperation>,
+    head: Option<OApiOperation>,
+    trace: Option<OApiOperation>,
     servers: Vec<OApiServer>,
-    parameters: String, //FIXME
+    parameters: Vec<OApiParameter>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -103,14 +106,14 @@ pub struct OApiOperation {
     tags: Vec<String>,
     summary: Option<String>,
     description: Option<String>,
-    external_docs: Option<String>, //FIXME
+    external_docs: Option<OApiExternalDocumentation>,
     operation_id: Option<String>,
-    parameters: Option<String>,   // FIXME
-    request_body: Option<String>, //FIXME
-    responses: Option<String>,    //FIXME
-    callbacks: Option<String>,    //FIXME
-    deprecated: bool,             //FIXME
-    security: Vec<String>,        //FIXME
+    parameters: Option<Vec<OApiParameter>>,
+    request_body: Option<OApiRequestBody>,
+    responses: HashMap<String, OApiResponse>,
+    callbacks: HashMap<String, OApiCallback>,
+    deprecated: bool,
+    security: HashMap<String, Vec<String>>,
     servers: Vec<OApiServer>,
 }
 
@@ -118,7 +121,7 @@ pub struct OApiOperation {
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiExternalDocumentation {
-    url: String,
+    url: Url,
     description: Option<String>,
 }
 
@@ -138,6 +141,13 @@ pub enum OApiParameterStyle {
     Simple,
 }
 
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub enum OApiExampleSelector {
+    Single(String), //FIXME VALUE
+    Multiple(Vec<OApiExample>),
+}
+
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
@@ -152,9 +162,9 @@ pub struct OApiParameter {
     style: Option<OApiParameterStyle>,
     explode: Option<bool>,
     allow_reserved: Option<bool>,
-    schema: Option<String>,   //FIXME
-    example: Option<String>,  //FIXME
-    examples: Option<String>, //FIXME
+    schema: Option<String>, //FIXME JSONSCHEMA
+    #[serde(flatten)]
+    example: Option<OApiExampleSelector>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -162,7 +172,7 @@ pub struct OApiParameter {
 #[serde(rename_all = "camelCase")]
 pub struct OApiRequestBody {
     description: Option<String>,
-    content: Option<String>, //FIXME
+    content: HashMap<String, OApiMediaType>, //FIXME JSONSCHEMA
     required: bool,
 }
 
@@ -170,10 +180,21 @@ pub struct OApiRequestBody {
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiMediaType {
-    schema: Option<String>,   //FIXME
-    example: Option<String>,  // FIXME use either
-    examples: Option<String>, //FIXME
-    encoding: Option<String>, //FIXME
+    schema: Option<String>, //FIXME JSONSCHEMA
+    #[serde(flatten)]
+    example: Option<OApiExampleSelector>,
+    encoding: HashMap<String, OApiEncoding>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiEncoding {
+    content_type: Option<String>,
+    headers: HashMap<String, OApiHeader>,
+    style: Option<String>,
+    explode: bool,
+    allow_reserved: bool,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -181,9 +202,9 @@ pub struct OApiMediaType {
 #[serde(rename_all = "camelCase")]
 pub struct OApiResponse {
     description: String,
-    headers: Option<String>, //FIXME
-    content: Option<String>, //FIXME
-    links: Option<String>,   //FIXME
+    headers: HashMap<String, OApiHeader>,
+    content: HashMap<String, OApiMediaType>,
+    links: HashMap<String, OApiLink>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -192,7 +213,7 @@ pub struct OApiResponse {
 pub struct OApiExample {
     summary: Option<String>,
     description: Option<String>,
-    value: Option<String>, //FIXME use serde_json::Value
+    value: Option<String>, //FIXME Value
     external_value: Option<String>,
 }
 
@@ -203,7 +224,7 @@ pub struct OApiLink {
     operation_ref: Option<String>,
     operation_id: Option<String>,
     parameters: HashMap<String, String>,
-    request_body: Option<String>, //FIXME
+    request_body: Option<String>,
     description: Option<String>,
     server: Option<OApiServer>,
 }
@@ -219,9 +240,9 @@ pub struct OApiHeader {
     style: Option<OApiParameterStyle>,
     explode: Option<bool>,
     allow_reserved: Option<bool>,
-    schema: Option<String>,   //FIXME
-    example: Option<String>,  //FIXME
-    examples: Option<String>, //FIXME
+    schema: Option<String>, //FIXME JSONSCHEMA
+    #[serde(flatten)]
+    example: Option<OApiExampleSelector>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
@@ -239,4 +260,105 @@ pub struct OApiTag {
 pub struct OApiDiscriminator {
     property_name: String,
     mapping: HashMap<String, String>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+#[serde(tag = "type")]
+pub enum OApiSecurityScheme {
+    ApiKey(OApiSecuritySchemeApiKey),
+    Http(OApiSecuritySchemeHttp),
+    Oauth2(Box<OApiSecurityOauth2>), // Boxed to reduce the size of the enum
+    OpenIdConnect(OApiSecurityOpenIdConnect),
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub enum OApiApiKeyLocation {
+    Query,
+    Header,
+    Cookie,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiSecuritySchemeApiKey {
+    description: Option<String>,
+    name: String,
+    #[serde(rename = "in")]
+    in_: OApiApiKeyLocation,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiSecuritySchemeHttp {
+    description: Option<String>,
+    scheme: String,
+    bearer_format: Option<String>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiSecurityOauth2 {
+    description: Option<String>,
+    flows: OApiOAuthFlow,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiSecurityOpenIdConnect {
+    description: Option<String>,
+    #[serde(rename = "openIdConnectUrl")]
+    openid_connect_url: Url,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiOAuthFlow {
+    implicit: Option<OApiOAuthFlowImplicit>,
+    password: Option<OApiOAuthFlowPassword>,
+    client_credentials: Option<OApiOAuthFlowClientCredentials>,
+    authorization_code: Option<OApiOAuthFlowAuthorizationCode>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiOAuthFlowImplicit {
+    authorization_url: Url,
+    refresh_url: Option<String>,
+    scopes: HashMap<String, String>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiOAuthFlowPassword {
+    token_url: Url,
+    refresh_url: Option<Url>,
+    scopes: HashMap<String, String>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiOAuthFlowClientCredentials {
+    token_url: Url,
+    refresh_url: Option<Url>,
+    scopes: HashMap<String, String>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
+#[getset(get = "pub")]
+#[serde(rename_all = "camelCase")]
+pub struct OApiOAuthFlowAuthorizationCode {
+    authorization_url: Url,
+    token_url: Url,
+    refresh_url: Option<Url>,
+    scopes: HashMap<String, String>,
 }
