@@ -1,10 +1,10 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiRoot {
-    openapi: String,
+pub struct OApiDocument {
+    openapi: OperatorSelector<String>,
     info: Option<OApiInfo>,
     servers: Option<OApiServer>,
     path: HashMap<String, OApiPathItem>,

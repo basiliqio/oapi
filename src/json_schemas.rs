@@ -4,7 +4,7 @@ fn default_as_false() -> bool {
     false
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 pub enum OApiNumericMaximum {
     #[serde(rename = "maximum")]
     Inclusive(u64),

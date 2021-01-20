@@ -1,7 +1,10 @@
 use super::*;
 use sppparse::{SparsePointer, SparseValue};
 
-pub trait OApiOperator<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
+pub trait OApiOperator<
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
+>
+{
     fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError>;
     fn new(val: Vec<OperatorSelector<T>>) -> Self;
 }
@@ -10,7 +13,13 @@ macro_rules! OApiOperatorImpl {
     ($struct_name:ident) => {
         impl<T> OApiOperator<T> for $struct_name<T>
         where
-            T: 'static + Serialize + DeserializeOwned + SparsableTrait,
+            T: 'static
+                + Serialize
+                + DeserializeOwned
+                + SparsableTrait
+                + Clone
+                + std::fmt::Debug
+                + PartialEq,
         {
             fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
                 let mut res: Vec<SparseValue<T>> = Vec::new();
@@ -28,33 +37,47 @@ macro_rules! OApiOperatorImpl {
     };
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable)]
-#[serde(bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait")]
-pub struct AnyOfSelect<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[serde(
+    bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait + Clone + std::fmt::Debug + PartialEq"
+)]
+pub struct AnyOfSelect<
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
+> {
     #[getset(get)]
     #[serde(rename = "anyOf")]
     root: Vec<OperatorSelector<T>>,
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable)]
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
 #[serde(bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait")]
-pub struct OneOfSelect<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
+pub struct OneOfSelect<
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
+> {
     #[getset(get)]
     #[serde(rename = "oneOf")]
     root: Vec<OperatorSelector<T>>,
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable)]
-#[serde(bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait")]
-pub struct AllOfSelect<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[serde(
+    bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait + Clone + std::fmt::Debug + PartialEq"
+)]
+pub struct AllOfSelect<
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
+> {
     #[getset(get)]
     #[serde(rename = "allOf")]
     root: Vec<OperatorSelector<T>>,
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable)]
-#[serde(bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait")]
-pub struct NotSelect<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[serde(
+    bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait + Clone + std::fmt::Debug + PartialEq"
+)]
+pub struct NotSelect<
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
+> {
     #[getset(get)]
     #[serde(rename = "not")]
     root: Vec<OperatorSelector<T>>,
@@ -65,10 +88,14 @@ OApiOperatorImpl!(OneOfSelect);
 OApiOperatorImpl!(AllOfSelect);
 OApiOperatorImpl!(NotSelect);
 
-#[derive(Serialize, Deserialize, Sparsable)]
-#[serde(bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait")]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(
+    bound = "T: 'static + DeserializeOwned + Serialize + SparsableTrait + Clone + std::fmt::Debug + PartialEq"
+)]
 #[serde(untagged)]
-pub enum OperatorSelector<T: 'static + Serialize + DeserializeOwned + SparsableTrait> {
+pub enum OperatorSelector<
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
+> {
     AnyOf(AnyOfSelect<T>),
     OneOf(OneOfSelect<T>),
     AllOf(AllOfSelect<T>),
@@ -78,7 +105,13 @@ pub enum OperatorSelector<T: 'static + Serialize + DeserializeOwned + SparsableT
 
 impl<T> OperatorSelector<T>
 where
-    T: 'static + Serialize + DeserializeOwned + SparsableTrait,
+    T: 'static
+        + Serialize
+        + DeserializeOwned
+        + SparsableTrait
+        + Clone
+        + std::fmt::Debug
+        + PartialEq,
 {
     fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
         match self {
@@ -87,6 +120,33 @@ where
             OperatorSelector::AllOf(x) => x.get(),
             OperatorSelector::Not(x) => x.get(),
             OperatorSelector::Val(x) => Ok(vec![x.get()?]),
+        }
+    }
+}
+
+impl<T> SparsableTrait for OperatorSelector<T>
+where
+    T: 'static
+        + Serialize
+        + DeserializeOwned
+        + SparsableTrait
+        + Clone
+        + std::fmt::Debug
+        + PartialEq,
+{
+    fn sparse_init(
+        &mut self,
+        state: &mut sppparse::SparseState,
+        metadata: &sppparse::SparseMetadata,
+        depth: u32,
+    ) -> Result<(), SparseError> {
+        let ndepth = depth + 1;
+        match self {
+            OperatorSelector::AnyOf(x) => x.sparse_init(state, metadata, ndepth),
+            OperatorSelector::OneOf(x) => x.sparse_init(state, metadata, ndepth),
+            OperatorSelector::AllOf(x) => x.sparse_init(state, metadata, ndepth),
+            OperatorSelector::Not(x) => x.sparse_init(state, metadata, ndepth),
+            OperatorSelector::Val(x) => x.sparse_init(state, metadata, ndepth),
         }
     }
 }
