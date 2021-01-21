@@ -19,3 +19,13 @@ fn petstore_bundled() {
 
     println!("{:#?}", doc);
 }
+
+#[test]
+fn petstore_yml() {
+    let doc: SparseRoot<oapi::OApiDocument> = SparseRoot::new_from_file(PathBuf::from(
+        oapi_test_path!("tests/documents/test_docs/openapi.yml"),
+    ))
+    .expect("to parse the openapi");
+
+    println!("{:#?}", doc);
+}

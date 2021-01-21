@@ -3,17 +3,17 @@ use super::*;
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 pub enum OApiNumericMaximum {
     #[serde(rename = "maximum")]
-    Inclusive(OperatorSelector<u64>),
+    Inclusive(u64),
     #[serde(rename = "exclusiveMaximum")]
-    Exclusive(OperatorSelector<u64>),
+    Exclusive(u64),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
 pub enum OApiNumericMinimum {
     #[serde(rename = "minimum")]
-    Inclusive(OperatorSelector<u64>),
+    Inclusive(u64),
     #[serde(rename = "exclusiveMinimum")]
-    Exclusive(OperatorSelector<u64>),
+    Exclusive(u64),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
@@ -40,25 +40,25 @@ pub enum OApiStringFormat {
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSchemaString {
-    pattern: Option<OperatorSelector<String>>, //TODO Support regex-
-    min_length: Option<OperatorSelector<u64>>,
-    max_length: Option<OperatorSelector<u64>>,
+    pattern: Option<String>, //TODO Support regex-
+    min_length: Option<u64>,
+    max_length: Option<u64>,
     format: Option<OApiStringFormat>,
     #[serde(rename = "enum")]
-    enum_: Option<OperatorSelector<Vec<OperatorSelector<String>>>>,
+    enum_: Option<Vec<String>>,
     #[serde(flatten)]
     common: OApiSchemaCommon,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 pub enum OApiSchemaAdditionalItem {
-    Any(OperatorSelector<bool>),
-    Obj(Box<OperatorSelector<OApiSchemaObject>>),
+    Any(bool),
+    Obj(Box<OperatorSelector<OApiSchema>>),
 }
 
 impl std::default::Default for OApiSchemaAdditionalItem {
     fn default() -> Self {
-        OApiSchemaAdditionalItem::Any(OperatorSelector::new_from_val(false))
+        OApiSchemaAdditionalItem::Any(false)
     }
 }
 
@@ -67,12 +67,12 @@ impl std::default::Default for OApiSchemaAdditionalItem {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiSchemaArray {
-    additional_items: OperatorSelector<OApiSchemaAdditionalItem>,
-    max_items: Option<OperatorSelector<u64>>,
-    min_items: Option<OperatorSelector<u64>>,
+    additional_items: OApiSchemaAdditionalItem,
+    max_items: Option<u64>,
+    min_items: Option<u64>,
     items: Option<OperatorSelector<OApiSchema>>,
     #[serde(default)]
-    unique_items: OperatorSelector<bool>,
+    unique_items: bool,
     #[serde(flatten)]
     common: OApiSchemaCommon,
 }
@@ -82,7 +82,7 @@ pub struct OApiSchemaArray {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiSchemaObject {
-    required: OperatorSelector<Vec<OperatorSelector<String>>>,
+    required: Vec<String>,
     properties: OperatorSelector<HashMap<String, OperatorSelector<OApiSchema>>>,
     max_properties: Option<OperatorSelector<u64>>,
     min_properties: Option<OperatorSelector<u64>>,
@@ -109,7 +109,7 @@ pub struct OApiSchemaNumeric {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiSchemaDiscriminator {
-    property_name: OperatorSelector<String>,
+    property_name: String,
     mapping: OperatorSelector<HashMap<String, String>>,
 }
 
@@ -118,11 +118,11 @@ pub struct OApiSchemaDiscriminator {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiSchemaXml {
-    name: Option<OperatorSelector<String>>,
-    namespace: Option<OperatorSelector<String>>,
-    prefix: Option<OperatorSelector<String>>,
-    attribute: Option<OperatorSelector<bool>>,
-    wrapped: Option<OperatorSelector<bool>>,
+    name: Option<String>,
+    namespace: Option<String>,
+    prefix: Option<String>,
+    attribute: Option<bool>,
+    wrapped: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default)]
