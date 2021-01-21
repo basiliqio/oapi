@@ -73,11 +73,11 @@ type OApiCallback = HashMap<String, OApiPathItem>;
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiComponents {
-    schemas: HashMap<String, OApiSchema>,
+    schemas: HashMap<String, OperatorSelector<OApiSchema>>,
     responses: HashMap<String, OApiResponse>,
     parameters: HashMap<String, OApiParameter>,
     examples: HashMap<String, OApiExampleSelector>,
-    // request_bodies: HashMap<String, OApiRequestBody>>>,
+    request_bodies: HashMap<String, OApiRequestBody>,
     headers: HashMap<String, OApiHeader>,
     security_schemes: HashMap<String, OApiSecurityScheme>,
     links: HashMap<String, OApiLink>,
@@ -171,7 +171,7 @@ pub struct OApiParameter {
     style: Option<OApiParameterStyle>,
     explode: Option<bool>,
     allow_reserved: Option<bool>,
-    schema: Option<OApiSchema>,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
 }
@@ -190,7 +190,7 @@ pub struct OApiRequestBody {
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiMediaType {
-    schema: Option<OApiSchema>,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
     #[serde(default)]
@@ -258,7 +258,7 @@ pub struct OApiHeader {
     style: Option<OApiParameterStyle>,
     explode: Option<bool>,
     allow_reserved: Option<bool>,
-    schema: Option<OApiSchema>,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
 }
