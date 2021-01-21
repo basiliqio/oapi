@@ -26,11 +26,11 @@ mod parameter_style;
 mod path_item;
 mod request_body;
 mod response;
-mod security_oauth2;
-mod security_open_id_connect;
 mod security_scheme;
 mod security_scheme_api_key;
 mod security_scheme_http;
+mod security_scheme_oauth2;
+mod security_scheme_open_id_connect;
 mod server;
 mod server_variable;
 mod tag;
@@ -49,9 +49,9 @@ pub use {
     oauth_flow_implicit::OApiOAuthFlowImplicit, oauth_flow_password::OApiOAuthFlowPassword,
     operation::OApiOperation, parameter::OApiParameter, parameter_location::OApiParameterLocation,
     parameter_style::OApiParameterStyle, path_item::OApiPathItem, request_body::OApiRequestBody,
-    response::OApiResponse, security_oauth2::OApiSecurityOauth2,
-    security_open_id_connect::OApiSecurityOpenIdConnect, security_scheme::OApiSecurityScheme,
+    response::OApiResponse, security_scheme::OApiSecurityScheme,
     security_scheme_api_key::OApiSecuritySchemeApiKey,
-    security_scheme_http::OApiSecuritySchemeHttp, server::OApiServer,
+    security_scheme_http::OApiSecuritySchemeHttp, security_scheme_oauth2::OApiSecuritySchemeOauth2,
+    security_scheme_open_id_connect::OApiSecuritySchemeOpenIdConnect, server::OApiServer,
     server_variable::OApiServerVariable, tag::OApiTag,
 };

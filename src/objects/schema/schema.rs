@@ -9,9 +9,9 @@ pub enum OApiSchema {
     Array(Box<OperatorSelector<OApiSchemaArray>>),
     #[serde(rename = "number")]
     #[serde(alias = "integer")]
-    Numeric(OperatorSelector<OApiSchemaNumeric>),
+    Numeric(Box<OperatorSelector<OApiSchemaNumeric>>),
     #[serde(rename = "string")]
-    String(OperatorSelector<OApiSchemaString>),
+    String(Box<OperatorSelector<OApiSchemaString>>),
     #[serde(rename = "boolean")]
     Bool,
     #[serde(rename = "null")]

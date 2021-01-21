@@ -26,6 +26,7 @@ pub use objects::{
     OApiInfo, OApiLicense, OApiLink, OApiMediaType, OApiOAuthFlow, OApiOAuthFlowAuthorizationCode,
     OApiOAuthFlowClientCredentials, OApiOAuthFlowImplicit, OApiOAuthFlowPassword, OApiOperation,
     OApiParameter, OApiParameterLocation, OApiParameterStyle, OApiPathItem, OApiRequestBody,
-    OApiResponse, OApiSecurityOauth2, OApiSecurityOpenIdConnect, OApiSecurityScheme,
-    OApiSecuritySchemeApiKey, OApiSecuritySchemeHttp, OApiServer, OApiServerVariable, OApiTag,
+    OApiResponse, OApiSecurityScheme, OApiSecuritySchemeApiKey, OApiSecuritySchemeHttp,
+    OApiSecuritySchemeOauth2, OApiSecuritySchemeOpenIdConnect, OApiServer, OApiServerVariable,
+    OApiTag,
 };

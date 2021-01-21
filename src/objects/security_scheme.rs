@@ -6,6 +6,6 @@ use super::*;
 pub enum OApiSecurityScheme {
     ApiKey(OApiSecuritySchemeApiKey),
     Http(OApiSecuritySchemeHttp),
-    Oauth2(Box<OApiSecurityOauth2>), // Boxed to reduce the size of the enum
-    OpenIdConnect(OApiSecurityOpenIdConnect),
+    Oauth2(Box<OApiSecuritySchemeOauth2>), // Boxed to reduce the size of the enum
+    OpenIdConnect(OApiSecuritySchemeOpenIdConnect),
 }
