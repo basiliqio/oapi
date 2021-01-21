@@ -7,23 +7,23 @@ use sppparse::{Sparsable, SparsableTrait, SparseError, SparsePointedValue, Spars
 use std::collections::HashMap;
 use url::Url;
 
-mod json_schemas;
+mod objects;
 mod operators;
-mod schemas;
 
 pub use operators::{
     AllOfSelect, AnyOfSelect, NotSelect, OApiOperator, OneOfSelect, OperatorSelector,
 };
 
-pub use json_schemas::{
-    OApiNumericMaximum, OApiNumericMinimum, OApiSchema, OApiSchemaAdditionalItem, OApiSchemaArray,
-    OApiSchemaNumeric, OApiSchemaObject, OApiSchemaString,
+pub use objects::schema::{
+    OApiNumericFormat, OApiNumericMaximum, OApiNumericMinimum, OApiSchema,
+    OApiSchemaAdditionalItem, OApiSchemaArray, OApiSchemaCommon, OApiSchemaDiscriminator,
+    OApiSchemaNumeric, OApiSchemaObject, OApiSchemaString, OApiSchemaXml, OApiStringFormat,
 };
 
-pub use schemas::{
-    OApiApiKeyLocation, OApiComponents, OApiContact, OApiDiscriminator, OApiDocument, OApiEncoding,
-    OApiExample, OApiExampleSelector, OApiExternalDocumentation, OApiHeader, OApiInfo, OApiLicense,
-    OApiLink, OApiMediaType, OApiOAuthFlow, OApiOAuthFlowAuthorizationCode,
+pub use objects::{
+    OApiApiKeyLocation, OApiCallback, OApiComponents, OApiContact, OApiDiscriminator, OApiDocument,
+    OApiEncoding, OApiExample, OApiExampleSelector, OApiExternalDocumentation, OApiHeader,
+    OApiInfo, OApiLicense, OApiLink, OApiMediaType, OApiOAuthFlow, OApiOAuthFlowAuthorizationCode,
     OApiOAuthFlowClientCredentials, OApiOAuthFlowImplicit, OApiOAuthFlowPassword, OApiOperation,
     OApiParameter, OApiParameterLocation, OApiParameterStyle, OApiPathItem, OApiRequestBody,
     OApiResponse, OApiSecurityOauth2, OApiSecurityOpenIdConnect, OApiSecurityScheme,
