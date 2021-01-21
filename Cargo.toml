@@ -15,3 +15,9 @@ getset = "0.1"
 httpstatus = "0.1.2"
 url = { version = "2.2.0", features = ["serde"] }
 serde_json = "1"
+
+
+[dev-dependencies.cargo-husky]
+version = "1"
+default-features = false # Disable features which are enabled by default
+features = ["precommit-hook", "run-cargo-check", "run-cargo-fmt"]

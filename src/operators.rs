@@ -99,7 +99,7 @@ pub enum OperatorSelector<
     AnyOf(AnyOfSelect<T>),
     OneOf(OneOfSelect<T>),
     AllOf(AllOfSelect<T>),
-	Not(NotSelect<T>),
+    Not(NotSelect<T>),
     Val(SparseSelector<T>),
 }
 

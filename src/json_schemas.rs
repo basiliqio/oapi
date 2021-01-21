@@ -19,21 +19,21 @@ pub enum OApiNumericMinimum {
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiNumericFormat {
-	Int32,
-	Int64,
-	Float,
-	Double
+    Int32,
+    Int64,
+    Float,
+    Double,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiStringFormat {
-	Byte,
-	Binary,
-	Date,
-	#[serde(rename = "date-time")]
-	DateTime,
-	Password
+    Byte,
+    Binary,
+    Date,
+    #[serde(rename = "date-time")]
+    DateTime,
+    Password,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable)]
@@ -42,12 +42,12 @@ pub enum OApiStringFormat {
 pub struct OApiSchemaString {
     pattern: Option<OperatorSelector<String>>, //TODO Support regex-
     min_length: Option<OperatorSelector<u64>>,
-	max_length: Option<OperatorSelector<u64>>,
-	format: Option<OApiStringFormat>,
+    max_length: Option<OperatorSelector<u64>>,
+    format: Option<OApiStringFormat>,
     #[serde(rename = "enum")]
-	enum_: Option<OperatorSelector<Vec<OperatorSelector<String>>>>,
-	#[serde(flatten)]
-	common: OApiSchemaCommon,
+    enum_: Option<OperatorSelector<Vec<OperatorSelector<String>>>>,
+    #[serde(flatten)]
+    common: OApiSchemaCommon,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
@@ -69,12 +69,12 @@ impl std::default::Default for OApiSchemaAdditionalItem {
 pub struct OApiSchemaArray {
     additional_items: OperatorSelector<OApiSchemaAdditionalItem>,
     max_items: Option<OperatorSelector<u64>>,
-	min_items: Option<OperatorSelector<u64>>,
-	items: Option<OperatorSelector<OApiSchema>>,
+    min_items: Option<OperatorSelector<u64>>,
+    items: Option<OperatorSelector<OApiSchema>>,
     #[serde(default)]
-	unique_items: OperatorSelector<bool>,
-	#[serde(flatten)]
-	common: OApiSchemaCommon,
+    unique_items: OperatorSelector<bool>,
+    #[serde(flatten)]
+    common: OApiSchemaCommon,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default)]
@@ -83,11 +83,11 @@ pub struct OApiSchemaArray {
 #[serde(default)]
 pub struct OApiSchemaObject {
     required: OperatorSelector<Vec<OperatorSelector<String>>>,
-	properties: OperatorSelector<HashMap<String, OperatorSelector<OApiSchema>>>,
-	max_properties: Option<OperatorSelector<u64>>,
-	min_properties: Option<OperatorSelector<u64>>,
-	#[serde(flatten)]
-	common: OApiSchemaCommon,
+    properties: OperatorSelector<HashMap<String, OperatorSelector<OApiSchema>>>,
+    max_properties: Option<OperatorSelector<u64>>,
+    min_properties: Option<OperatorSelector<u64>>,
+    #[serde(flatten)]
+    common: OApiSchemaCommon,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable)]
@@ -98,10 +98,10 @@ pub struct OApiSchemaNumeric {
     #[serde(flatten)]
     maximum: Option<OperatorSelector<OApiNumericMaximum>>,
     #[serde(flatten)]
-	minimum: Option<OperatorSelector<OApiNumericMinimum>>,
-	format: Option<OApiNumericFormat>,
-	#[serde(flatten)]
-	common: OApiSchemaCommon,
+    minimum: Option<OperatorSelector<OApiNumericMinimum>>,
+    format: Option<OApiNumericFormat>,
+    #[serde(flatten)]
+    common: OApiSchemaCommon,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default)]
@@ -109,8 +109,8 @@ pub struct OApiSchemaNumeric {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiSchemaDiscriminator {
-	property_name: OperatorSelector<String>,
-	mapping: OperatorSelector<HashMap<String, String>>
+    property_name: OperatorSelector<String>,
+    mapping: OperatorSelector<HashMap<String, String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default)]
@@ -118,11 +118,11 @@ pub struct OApiSchemaDiscriminator {
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiSchemaXml {
-	name: Option<OperatorSelector<String>>,
-	namespace: Option<OperatorSelector<String>>,
-	prefix: Option<OperatorSelector<String>>,
-	attribute: Option<OperatorSelector<bool>>,
-	wrapped: Option<OperatorSelector<bool>>,
+    name: Option<OperatorSelector<String>>,
+    namespace: Option<OperatorSelector<String>>,
+    prefix: Option<OperatorSelector<String>>,
+    attribute: Option<OperatorSelector<bool>>,
+    wrapped: Option<OperatorSelector<bool>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default)]
@@ -131,28 +131,28 @@ pub struct OApiSchemaXml {
 #[serde(default)]
 pub struct OApiSchemaCommon {
     nullable: Option<OperatorSelector<bool>>,
-	read_only: Option<OperatorSelector<bool>>,
-	write_only: Option<OperatorSelector<bool>>,
-	example: Option<OperatorSelector<Value>>,
-	deprecated: Option<OperatorSelector<bool>>,
-	discriminator: Option<OperatorSelector<OApiDiscriminator>>,
-	external_docs: Option<OperatorSelector<OApiExternalDocumentation>>,
+    read_only: Option<OperatorSelector<bool>>,
+    write_only: Option<OperatorSelector<bool>>,
+    example: Option<OperatorSelector<Value>>,
+    deprecated: Option<OperatorSelector<bool>>,
+    discriminator: Option<OperatorSelector<OApiDiscriminator>>,
+    external_docs: Option<OperatorSelector<OApiExternalDocumentation>>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
 #[serde(tag = "type")]
 pub enum OApiSchema {
-	#[serde(rename = "object")]
+    #[serde(rename = "object")]
     Obj(Box<OperatorSelector<OApiSchemaObject>>),
-	#[serde(rename = "array")]
+    #[serde(rename = "array")]
     Array(Box<OperatorSelector<OApiSchemaArray>>),
-	#[serde(rename = "number")]
-	#[serde(alias = "integer")]
-	Numeric(OperatorSelector<OApiSchemaNumeric>),
-	#[serde(rename = "string")]
-	String(OperatorSelector<OApiSchemaString>),
-	#[serde(rename = "boolean")]
-	Bool,
-	#[serde(rename = "null")]
-    Null
+    #[serde(rename = "number")]
+    #[serde(alias = "integer")]
+    Numeric(OperatorSelector<OApiSchemaNumeric>),
+    #[serde(rename = "string")]
+    String(OperatorSelector<OApiSchemaString>),
+    #[serde(rename = "boolean")]
+    Bool,
+    #[serde(rename = "null")]
+    Null,
 }
