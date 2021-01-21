@@ -99,8 +99,24 @@ pub enum OperatorSelector<
     AnyOf(AnyOfSelect<T>),
     OneOf(OneOfSelect<T>),
     AllOf(AllOfSelect<T>),
-    Not(NotSelect<T>),
+	Not(NotSelect<T>),
     Val(SparseSelector<T>),
+}
+
+impl<T> std::default::Default for OperatorSelector<T>
+where
+    T: 'static
+        + Serialize
+        + DeserializeOwned
+        + SparsableTrait
+        + Clone
+        + std::fmt::Debug
+        + PartialEq
+        + Default,
+{
+    fn default() -> Self {
+        OperatorSelector::new_from_val(T::default())
+    }
 }
 
 impl<T> OperatorSelector<T>

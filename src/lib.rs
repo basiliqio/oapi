@@ -19,3 +19,13 @@ pub use json_schemas::{
     OApiNumericMaximum, OApiNumericMinimum, OApiSchema, OApiSchemaAdditionalItem, OApiSchemaArray,
     OApiSchemaNumeric, OApiSchemaObject, OApiSchemaString,
 };
+
+pub use schemas::{
+    OApiApiKeyLocation, OApiComponents, OApiContact, OApiDiscriminator, OApiDocument, OApiEncoding,
+    OApiExample, OApiExampleSelector, OApiExternalDocumentation, OApiHeader, OApiInfo, OApiLicense,
+    OApiLink, OApiMediaType, OApiOAuthFlow, OApiOAuthFlowAuthorizationCode,
+    OApiOAuthFlowClientCredentials, OApiOAuthFlowImplicit, OApiOAuthFlowPassword, OApiOperation,
+    OApiParameter, OApiParameterLocation, OApiParameterStyle, OApiPathItem, OApiRequestBody,
+    OApiResponse, OApiSecurityOauth2, OApiSecurityOpenIdConnect, OApiSecurityScheme,
+    OApiSecuritySchemeApiKey, OApiSecuritySchemeHttp, OApiServer, OApiServerVariable, OApiTag,
+};
