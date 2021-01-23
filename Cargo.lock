@@ -357,6 +357,7 @@ dependencies = [
 [[package]]
 name = "sppparse"
 version = "0.1.1"
+source = "git+ssh://git@gitlab.com/basiliq/sppparse.git#48cb0d70cd610469b26942e98687fe41ad032121"
 dependencies = [
  "auto_impl",
  "getset",
@@ -376,6 +377,7 @@ dependencies = [
 [[package]]
 name = "sppparse_derive"
 version = "0.1.1"
+source = "git+ssh://git@gitlab.com/basiliq/sppparse.git#48cb0d70cd610469b26942e98687fe41ad032121"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
