@@ -20,7 +20,7 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 		};
 		quote! {
 			bread_crumb.push(#bi_string.to_string());
-			#bi.oapi_check(root, bread_crumb)?;
+			#bi.oapi_check_inner(root, bread_crumb)?;
 			bread_crumb.pop();
 		}
 	});
@@ -43,7 +43,7 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 		#sppparse_include
 
 		gen impl oapi::OApiCheckTrait for @Self {
-			fn oapi_check(&self, root: &sppparse::SparseRoot<oapi::OApiDocument>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
+			fn oapi_check_inner(&self, root: &sppparse::SparseRoot<oapi::OApiDocument>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
 			{
 				match *self { #body };
 				Ok(())

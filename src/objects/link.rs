@@ -42,6 +42,19 @@ impl OApiLink {
 }
 
 impl OApiCheckTrait for OApiLink {
+    fn oapi_check_inner(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.operation_ref.oapi_check(root, bread_crumb)?;
+        self.operation_id.oapi_check(root, bread_crumb)?;
+        self.parameters.oapi_check(root, bread_crumb)?;
+        self.request_body.oapi_check(root, bread_crumb)?;
+        self.description.oapi_check(root, bread_crumb)?;
+        self.server.oapi_check(root, bread_crumb)?;
+        Ok(())
+    }
     fn oapi_check(
         &self,
         root: &SparseRoot<OApiDocument>,
@@ -57,6 +70,6 @@ impl OApiCheckTrait for OApiLink {
                 ));
             }
         }
-        Ok(())
+        self.oapi_check_inner(root, bread_crumb)
     }
 }

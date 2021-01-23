@@ -37,31 +37,28 @@ impl OApiDocument {
     }
     fn check_path_parameters_inner(
         bread_crumb: &mut Vec<String>,
-        path: &String,
+        path: &str,
         parameters: Vec<&OApiParameter>,
     ) -> Result<(), OApiError> {
         for param in parameters.into_iter() {
-            match param.in_() {
-                OApiParameterLocation::Path => {
-                    if !path.contains(format!("{{{}}}", param.name()).as_str()) {
-                        bread_crumb.push(path.clone());
-                        return Err(OApiError::OApiCheck(
-                            crate::check::connect_bread_crumbs(bread_crumb),
-                            format!("Parameter `{{{}}}` is not present in path", param.name()),
-                        ));
-                    }
-                    if !param.required() {
-                        bread_crumb.push(path.clone());
-                        return Err(OApiError::OApiCheck(
-                            crate::check::connect_bread_crumbs(bread_crumb),
-                            format!(
-                                "Parameter `{{{}}}` requirement is mandatory, because it's in path",
-                                param.name()
-                            ),
-                        ));
-                    }
+            if let OApiParameterLocation::Path = param.in_() {
+                if !path.contains(format!("{{{}}}", param.name()).as_str()) {
+                    bread_crumb.push(path.to_string());
+                    return Err(OApiError::OApiCheck(
+                        crate::check::connect_bread_crumbs(bread_crumb),
+                        format!("Parameter `{{{}}}` is not present in path", param.name()),
+                    ));
                 }
-                _ => (),
+                if !param.required() {
+                    bread_crumb.push(path.to_string());
+                    return Err(OApiError::OApiCheck(
+                        crate::check::connect_bread_crumbs(bread_crumb),
+                        format!(
+                            "Parameter `{{{}}}` requirement is mandatory, because it's in path",
+                            param.name()
+                        ),
+                    ));
+                }
             }
         }
         Ok(())
@@ -113,7 +110,7 @@ impl OApiDocument {
         }
     }
 
-    pub fn get_operation_id(&self, opid_searched: &String) -> Option<&OApiOperation> {
+    pub fn get_operation_id(&self, opid_searched: &str) -> Option<&OApiOperation> {
         let mut opid: Vec<Option<&OApiOperation>> = Vec::with_capacity(8);
         for op in self.path().values() {
             opid.push(op.get().as_ref());
@@ -139,9 +136,25 @@ impl OApiDocument {
 }
 
 impl OApiCheckTrait for OApiDocument {
+    fn oapi_check_inner(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.openapi.oapi_check(root, bread_crumb)?;
+        self.info.oapi_check(root, bread_crumb)?;
+        self.servers.oapi_check(root, bread_crumb)?;
+        self.path.oapi_check(root, bread_crumb)?;
+        self.components.oapi_check(root, bread_crumb)?;
+        self.security.oapi_check(root, bread_crumb)?;
+        self.tags.oapi_check(root, bread_crumb)?;
+        self.external_docs.oapi_check(root, bread_crumb)?;
+        Ok(())
+    }
+
     fn oapi_check(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.check_semver()?;
@@ -168,6 +181,6 @@ impl OApiCheckTrait for OApiDocument {
         }
         self.check_path_parameters(bread_crumb)?;
         bread_crumb.pop();
-        Ok(())
+        self.oapi_check_inner(root, bread_crumb)
     }
 }

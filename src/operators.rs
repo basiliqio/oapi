@@ -228,7 +228,7 @@ where
         + OApiCheckTrait
         + PartialEq,
 {
-    fn oapi_check(
+    fn oapi_check_inner(
         &self,
         root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
@@ -240,5 +240,13 @@ where
             OperatorSelector::Not(x) => x.oapi_check(root, bread_crumb),
             OperatorSelector::Val(x) => x.oapi_check(root, bread_crumb),
         }
+    }
+
+    fn oapi_check(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.oapi_check_inner(root, bread_crumb)
     }
 }

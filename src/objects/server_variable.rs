@@ -12,9 +12,20 @@ pub struct OApiServerVariable {
 }
 
 impl OApiCheckTrait for OApiServerVariable {
+    fn oapi_check_inner(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.enum_.oapi_check(root, bread_crumb)?;
+        self.default.oapi_check(root, bread_crumb)?;
+        self.description.oapi_check(root, bread_crumb)?;
+        Ok(())
+    }
+
     fn oapi_check(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         if self.enum_.is_empty() {
@@ -31,6 +42,6 @@ impl OApiCheckTrait for OApiServerVariable {
                 "default value should be present in `enum`".to_string(),
             ));
         }
-        Ok(())
+        self.oapi_check_inner(root, bread_crumb)
     }
 }
