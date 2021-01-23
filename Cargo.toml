@@ -15,7 +15,8 @@ getset = "0.1"
 httpstatus = "0.1.2"
 url = { version = "2.2.0", features = ["serde"] }
 serde_json = "1"
-
+thiserror = "1"
+oapi_proc_macro = { path = "./oapi_proc_macro" }
 
 [dev-dependencies.cargo-husky]
 version = "1"

@@ -1,0 +1,14 @@
+[package]
+name = "oapi_proc_macro"
+version = "0.1.0"
+authors = ["Francis Le Roy <francis.leroy@protonmail.ch>"]
+edition = "2018"
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0"
+synstructure = "0.12"
+proc-macro2 = "1"
+proc-macro-crate = "0.1.5"
+syn = { version = "1", features = ["derive", "parsing"] }

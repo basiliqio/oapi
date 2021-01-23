@@ -3,12 +3,20 @@
 use getset::Getters;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::Value;
-use sppparse::{Sparsable, SparsableTrait, SparseError, SparsePointedValue, SparseSelector};
+use sppparse::{
+    Sparsable, SparsableTrait, SparseError, SparsePointedValue, SparseRoot, SparseSelector,
+};
 use std::collections::HashMap;
 use url::Url;
 
+mod check;
+mod error;
 mod objects;
 mod operators;
+pub use error::OApiError;
+
+pub use check::OApiCheck as OApiCheckTrait;
+pub use oapi_proc_macro::OApiCheck;
 
 pub use operators::{
     AllOfSelect, AnyOfSelect, NotSelect, OApiOperator, OneOfSelect, OperatorSelector,
