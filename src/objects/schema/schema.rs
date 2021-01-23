@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable, OApiCheck)]
 #[serde(tag = "type")]
 pub enum OApiSchema {
     #[serde(rename = "object")]

@@ -17,6 +17,7 @@ url = { version = "2.2.0", features = ["serde"] }
 serde_json = "1"
 thiserror = "1"
 oapi_proc_macro = { path = "./oapi_proc_macro" }
+auto_impl = "0.4.1"
 
 [dev-dependencies.cargo-husky]
 version = "1"

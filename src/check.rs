@@ -1,5 +1,7 @@
 use super::*;
+use auto_impl::auto_impl;
 
+#[auto_impl(&mut, Box)]
 pub trait OApiCheck {
     fn oapi_check(
         &self,
@@ -29,6 +31,67 @@ impl OApiCheck for Url {
         _bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         Ok(())
+    }
+}
+
+impl<T> OApiCheck for SparseSelector<T>
+where
+    T: DeserializeOwned + Serialize + SparsableTrait + OApiCheckTrait,
+{
+    fn oapi_check(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        match self {
+            SparseSelector::Ref(x) => x.oapi_check(root, bread_crumb),
+            SparseSelector::Obj(x) => x.oapi_check(root, bread_crumb),
+            _ => Ok(()),
+        }
+    }
+}
+
+impl<T> OApiCheck for sppparse::SparseRefRaw<T>
+where
+    T: DeserializeOwned + Serialize + SparsableTrait + OApiCheckTrait,
+{
+    fn oapi_check(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.val().oapi_check(root, bread_crumb)
+    }
+}
+
+impl<T> OApiCheck for sppparse::SparseRef<T>
+where
+    T: DeserializeOwned + Serialize + SparsableTrait + OApiCheckTrait,
+{
+    fn oapi_check(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.val().oapi_check(root, bread_crumb)
+    }
+}
+
+impl<T> OApiCheck for sppparse::SparsePointedValue<T>
+where
+    T: DeserializeOwned + Serialize + SparsableTrait + OApiCheckTrait,
+{
+    fn oapi_check(
+        &self,
+        root: &SparseRoot<OApiDocument>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        match self {
+            SparsePointedValue::Ref(x) => x.oapi_check(root, bread_crumb),
+            SparsePointedValue::RefRaw(x) => x.oapi_check(root, bread_crumb),
+            SparsePointedValue::Obj(x) => x.oapi_check(root, bread_crumb),
+            _ => Ok(()),
+        }
     }
 }
 

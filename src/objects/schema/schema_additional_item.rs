@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable, OApiCheck)]
 pub enum OApiSchemaAdditionalItem {
     Any(bool),
     Obj(Box<OperatorSelector<OApiSchema>>),

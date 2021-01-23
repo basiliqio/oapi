@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable, OApiCheck)]
 #[serde(rename_all = "camelCase")]
 pub enum OApiNumericFormat {
     Int32,
