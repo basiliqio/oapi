@@ -1,6 +1,12 @@
 use super::*;
 use auto_impl::auto_impl;
 
+pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
+    let mut res = String::from('/');
+    res.push_str(bread_crumb.join("/").as_str());
+    res
+}
+
 #[auto_impl(&mut, Box)]
 pub trait OApiCheck {
     fn oapi_check(
