@@ -31,16 +31,46 @@ fn check_semver_too_high() {
 }
 
 #[test]
-fn check_semver_bad_formatted() {
+fn check_parameter_dup_path() {
     let doc: oapi::OApi = oapi::OApi::new(
         SparseRoot::new_from_file(PathBuf::from(oapi_test_path!(
-            "tests/documents/test_docs/check_semver_bad_formatted.yml"
+            "tests/documents/test_docs/check_parameter_dup_path.yml"
         )))
         .expect("to parse the openapi"),
     );
 
     let err: oapi::OApiError = doc
         .check()
-        .expect_err("Expect an error concerning the semver");
+        .expect_err("Expect an error concerning the duplicate parameter");
+    println!("{}", err);
+}
+
+#[test]
+fn check_parameter_required_in_path() {
+    let doc: oapi::OApi = oapi::OApi::new(
+        SparseRoot::new_from_file(PathBuf::from(oapi_test_path!(
+            "tests/documents/test_docs/check_parameter_required_in_path.yml"
+        )))
+        .expect("to parse the openapi"),
+    );
+
+    let err: oapi::OApiError = doc
+        .check()
+        .expect_err("Expect an error concerning the required parameter");
+    println!("{}", err);
+}
+
+#[test]
+fn check_parameter_absent_in_path() {
+    let doc: oapi::OApi = oapi::OApi::new(
+        SparseRoot::new_from_file(PathBuf::from(oapi_test_path!(
+            "tests/documents/test_docs/check_parameter_absent_path.yml"
+        )))
+        .expect("to parse the openapi"),
+    );
+
+    let err: oapi::OApiError = doc
+        .check()
+        .expect_err("Expect an error concerning the required parameter");
     println!("{}", err);
 }

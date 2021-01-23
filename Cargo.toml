@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 # sppparse = "0.1.0"
 # sppparse = { version = "0.1.1", git = "ssh://git@gitlab.com/basiliq/sppparse.git",  features = [ "url" ] }
-sppparse = { version = "0.1.1", path = "../sppparse/sppparse",  features = [ "url" ] }
+sppparse = { version = "0.1.1", path = "../sppparse/sppparse",  features = [ "url", "semver" ] }
 serde = "1"
 getset = "0.1"
 httpstatus = "0.1.2"
@@ -18,7 +18,7 @@ serde_json = "1"
 thiserror = "1"
 oapi_proc_macro = { path = "./oapi_proc_macro" }
 auto_impl = "0.4.1"
-
+semver = { version = "0.11.0", features = [ "serde" ] }
 [dev-dependencies.cargo-husky]
 version = "1"
 default-features = false # Disable features which are enabled by default

@@ -48,6 +48,16 @@ impl OApiCheck for Url {
     }
 }
 
+impl OApiCheck for Version {
+    fn oapi_check_inner(
+        &self,
+        _root: &SparseRoot<OApiDocument>,
+        _bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        Ok(())
+    }
+}
+
 impl<T> OApiCheck for SparseSelector<T>
 where
     T: DeserializeOwned + Serialize + SparsableTrait + OApiCheckTrait,

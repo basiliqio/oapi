@@ -5,12 +5,17 @@ use super::*;
 #[serde(rename_all = "camelCase")]
 pub struct OApiHeader {
     description: Option<String>,
+    #[serde(default)]
     required: bool,
+    #[serde(default)]
     deprecated: bool,
+    #[serde(default)]
     allow_empty_value: bool,
     style: Option<OApiParameterStyle>,
-    explode: Option<bool>,
-    allow_reserved: Option<bool>,
+    #[serde(default)]
+    explode: bool,
+    #[serde(default)]
+    allow_reserved: bool,
     schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,

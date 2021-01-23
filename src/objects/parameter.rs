@@ -8,12 +8,16 @@ pub struct OApiParameter {
     #[serde(rename = "in")]
     in_: OApiParameterLocation,
     description: Option<String>,
-    required: bool,
+    required: Option<bool>,
+    #[serde(default)]
     deprecated: bool,
+    #[serde(default)]
     allow_empty_value: bool,
     style: Option<OApiParameterStyle>,
-    explode: Option<bool>,
-    allow_reserved: Option<bool>,
+    #[serde(default)]
+    explode: bool,
+    #[serde(default)]
+    allow_reserved: bool,
     schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,

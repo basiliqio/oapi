@@ -5,11 +5,11 @@ use std::collections::HashSet;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiDocument {
-    openapi: String,
+    openapi: Version,
     info: OApiInfo,
     servers: Option<Vec<OApiServer>>,
     #[serde(default)]
-    path: HashMap<String, OApiPathItem>,
+    paths: HashMap<String, OApiPathItem>,
     components: Option<OApiComponents>,
     #[serde(default)]
     security: HashMap<String, OApiSecurityScheme>,
@@ -19,15 +19,8 @@ pub struct OApiDocument {
 
 impl OApiDocument {
     fn check_semver(&self) -> Result<(), OApiError> {
-        let version: Vec<&str> = self.openapi.split('.').collect();
-
-        if version.len() > 3 || version.is_empty() {
-            return Err(OApiError::OApiCheck(
-                "/openapi".to_string(),
-                "Wrong semver for OpenApi".to_string(),
-            ));
-        }
-        if version[0] != "3" {
+        let version_req: VersionReq = VersionReq::parse("^3.0.0").unwrap();
+        if !version_req.matches(&self.openapi) {
             return Err(OApiError::OApiCheck(
                 "/openapi".to_string(),
                 "Only OpenApi ^3 is supported".to_string(),
@@ -35,12 +28,20 @@ impl OApiDocument {
         }
         Ok(())
     }
+
     fn check_path_parameters_inner(
         bread_crumb: &mut Vec<String>,
         path: &str,
         parameters: Vec<&OApiParameter>,
     ) -> Result<(), OApiError> {
+        let mut uniq: HashSet<(&String, &OApiParameterLocation)> = HashSet::new();
         for param in parameters.into_iter() {
+            if !uniq.insert((param.name(), param.in_())) {
+                return Err(OApiError::OApiCheck(
+                    crate::check::connect_bread_crumbs(bread_crumb),
+                    "Parameters should be unique by name and location".to_string(),
+                ));
+            }
             if let OApiParameterLocation::Path = param.in_() {
                 if !path.contains(format!("{{{}}}", param.name()).as_str()) {
                     bread_crumb.push(path.to_string());
@@ -49,22 +50,24 @@ impl OApiDocument {
                         format!("Parameter `{{{}}}` is not present in path", param.name()),
                     ));
                 }
-                if !param.required() {
-                    bread_crumb.push(path.to_string());
-                    return Err(OApiError::OApiCheck(
-                        crate::check::connect_bread_crumbs(bread_crumb),
-                        format!(
-                            "Parameter `{{{}}}` requirement is mandatory, because it's in path",
-                            param.name()
-                        ),
-                    ));
+                if let Some(required) = param.required() {
+                    if !*required {
+                        bread_crumb.push(path.to_string());
+                        return Err(OApiError::OApiCheck(
+                            crate::check::connect_bread_crumbs(bread_crumb),
+                            format!(
+                                "Parameter `{{{}}}` requirement is mandatory, because it's in path",
+                                param.name()
+                            ),
+                        ));
+                    }
                 }
             }
         }
         Ok(())
     }
     fn check_path_parameters(&self, bread_crumb: &mut Vec<String>) -> Result<(), OApiError> {
-        for (path, op) in self.path().iter() {
+        for (path, op) in self.paths().iter() {
             let mut params: Vec<&OApiParameter> = Vec::new();
             params.extend(op.parameters().iter());
             if let Some(x) = op.get() {
@@ -112,7 +115,7 @@ impl OApiDocument {
 
     pub fn get_operation_id(&self, opid_searched: &str) -> Option<&OApiOperation> {
         let mut opid: Vec<Option<&OApiOperation>> = Vec::with_capacity(8);
-        for op in self.path().values() {
+        for op in self.paths().values() {
             opid.push(op.get().as_ref());
             opid.push(op.head().as_ref());
             opid.push(op.post().as_ref());
@@ -144,7 +147,7 @@ impl OApiCheckTrait for OApiDocument {
         self.openapi.oapi_check(root, bread_crumb)?;
         self.info.oapi_check(root, bread_crumb)?;
         self.servers.oapi_check(root, bread_crumb)?;
-        self.path.oapi_check(root, bread_crumb)?;
+        self.paths.oapi_check(root, bread_crumb)?;
         self.components.oapi_check(root, bread_crumb)?;
         self.security.oapi_check(root, bread_crumb)?;
         self.tags.oapi_check(root, bread_crumb)?;
@@ -161,10 +164,9 @@ impl OApiCheckTrait for OApiDocument {
         let mut uniq: HashSet<&String> = HashSet::new();
         bread_crumb.push("path".to_string());
 
-        for op in self.path.values() {
-            let mut resp: Vec<bool> = Vec::with_capacity(9);
+        for op in self.paths.values() {
+            let mut resp: Vec<bool> = Vec::with_capacity(8);
             OApiDocument::check_opid(&mut resp, &mut uniq, op.get().as_ref());
-            OApiDocument::check_opid(&mut resp, &mut uniq, op.trace().as_ref());
             OApiDocument::check_opid(&mut resp, &mut uniq, op.delete().as_ref());
             OApiDocument::check_opid(&mut resp, &mut uniq, op.put().as_ref());
             OApiDocument::check_opid(&mut resp, &mut uniq, op.patch().as_ref());

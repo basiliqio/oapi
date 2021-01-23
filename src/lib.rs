@@ -1,6 +1,7 @@
 #![warn(clippy::all)]
 
 use getset::Getters;
+use semver::{Version, VersionReq};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::Value;
 use sppparse::{
