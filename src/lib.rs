@@ -11,12 +11,15 @@ use url::Url;
 
 mod check;
 mod error;
+mod oapi_root;
 mod objects;
 mod operators;
-pub use error::OApiError;
 
 pub use check::OApiCheck as OApiCheckTrait;
+pub use error::OApiError;
 pub use oapi_proc_macro::OApiCheck;
+
+pub use oapi_root::OApi;
 
 pub use operators::{
     AllOfSelect, AnyOfSelect, NotSelect, OApiOperator, OneOfSelect, OperatorSelector,

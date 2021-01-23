@@ -21,7 +21,7 @@ impl OApiDocument {
     fn check_semver(&self) -> Result<(), OApiError> {
         let version: Vec<&str> = self.openapi.split('.').collect();
 
-        if version.len() != 3 {
+        if version.len() > 3 || version.is_empty() {
             return Err(OApiError::OApiCheck(
                 "/openapi".to_string(),
                 "Wrong semver for OpenApi".to_string(),

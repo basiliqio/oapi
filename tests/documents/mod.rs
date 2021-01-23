@@ -7,6 +7,7 @@ macro_rules! oapi_test_path {
     };
 }
 
+mod checks;
 mod parse_valid;
 
 use sppparse::SparseRoot;
