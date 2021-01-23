@@ -5,7 +5,7 @@ use sppparse::SparsePointer;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiLink {
-    operation_ref: Option<SparseSelector<OApiOperation>>,
+    operation_ref: Option<String>, //TODO Handle inline links
     operation_id: Option<String>,
     #[serde(default)]
     parameters: HashMap<String, String>,
@@ -23,17 +23,17 @@ impl OApiLink {
                     "Either `operationRef` or `operationId` should be defined".to_string(),
                 ));
             }
-            (None, Some(x)) => match x.get() {
-                Ok(_) => (),
-                Err(sppparse::SparseError::BadPointer) => {
-                    bread_crumb.push("operation_ref".to_string());
-                    return Err(OApiError::OApiCheck(
-                        crate::check::connect_bread_crumbs(bread_crumb),
-                        "The `operationRef` pointer is invalid".to_string(),
-                    ));
-                }
-                Err(err) => return Err(OApiError::SppparseError(err)),
-            },
+            // (None, Some(x)) => match x.get() {
+            //     Ok(_) => (),
+            //     Err(sppparse::SparseError::BadPointer) => {
+            //         bread_crumb.push("operation_ref".to_string());
+            //         return Err(OApiError::OApiCheck(
+            //             crate::check::connect_bread_crumbs(bread_crumb),
+            //             "The `operationRef` pointer is invalid".to_string(),
+            //         ));
+            //     }
+            //     Err(err) => return Err(OApiError::SppparseError(err)),
+            // },
             _ => (),
         }
 
@@ -62,7 +62,7 @@ impl OApiCheckTrait for OApiLink {
     ) -> Result<(), OApiError> {
         self.check_target(bread_crumb)?;
         if let Some(opid) = self.operation_id() {
-            if root.root_get()?.get_operation_id(&opid).is_some() {
+            if root.root_get()?.get_operation_id(&opid).is_none() {
                 bread_crumb.push("operation_id".to_string());
                 return Err(OApiError::OApiCheck(
                     crate::check::connect_bread_crumbs(bread_crumb),

@@ -177,7 +177,7 @@ impl OApiCheckTrait for OApiDocument {
             if !resp.into_iter().all(|a| a) {
                 return Err(OApiError::OApiCheck(
                     crate::check::connect_bread_crumbs(bread_crumb),
-                    "OperationId should be unique amongst all the path".to_string(),
+                    "OperationId should be unique amongst all the paths".to_string(),
                 ));
             }
         }

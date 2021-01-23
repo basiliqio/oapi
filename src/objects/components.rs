@@ -7,6 +7,7 @@ use super::*;
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
 pub struct OApiComponents {
+    links: HashMap<String, OApiLink>,
     schemas: HashMap<String, OperatorSelector<OApiSchema>>,
     responses: HashMap<String, OApiResponse>,
     parameters: HashMap<String, OApiParameter>,
@@ -14,6 +15,5 @@ pub struct OApiComponents {
     request_bodies: HashMap<String, OApiRequestBody>,
     headers: HashMap<String, OApiHeader>,
     security_schemes: HashMap<String, OApiSecurityScheme>,
-    links: HashMap<String, OApiLink>,
     callbacks: HashMap<String, OApiCallback>,
 }

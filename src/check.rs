@@ -68,8 +68,8 @@ where
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
-            SparseSelector::Ref(x) => x.oapi_check_inner(root, bread_crumb),
-            SparseSelector::Obj(x) => x.oapi_check_inner(root, bread_crumb),
+            SparseSelector::Ref(x) => x.oapi_check(root, bread_crumb),
+            SparseSelector::Obj(x) => x.oapi_check(root, bread_crumb),
             _ => Ok(()),
         }
     }
@@ -84,7 +84,7 @@ where
         root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
-        self.val().oapi_check_inner(root, bread_crumb)
+        self.val().oapi_check(root, bread_crumb)
     }
 }
 
@@ -97,7 +97,7 @@ where
         root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
-        self.val().oapi_check_inner(root, bread_crumb)
+        self.val().oapi_check(root, bread_crumb)
     }
 }
 
@@ -111,9 +111,9 @@ where
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
-            SparsePointedValue::Ref(x) => x.oapi_check_inner(root, bread_crumb),
-            SparsePointedValue::RefRaw(x) => x.oapi_check_inner(root, bread_crumb),
-            SparsePointedValue::Obj(x) => x.oapi_check_inner(root, bread_crumb),
+            SparsePointedValue::Ref(x) => x.oapi_check(root, bread_crumb),
+            SparsePointedValue::RefRaw(x) => x.oapi_check(root, bread_crumb),
+            SparsePointedValue::Obj(x) => x.oapi_check(root, bread_crumb),
             _ => Ok(()),
         }
     }
@@ -139,7 +139,7 @@ where
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
-            Some(x) => x.oapi_check_inner(root, bread_crumb),
+            Some(x) => x.oapi_check(root, bread_crumb),
             None => Ok(()),
         }
     }
@@ -175,7 +175,7 @@ where
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         for i in self.values() {
-            i.oapi_check_inner(root, bread_crumb)?;
+            i.oapi_check(root, bread_crumb)?;
         }
         Ok(())
     }
@@ -193,7 +193,7 @@ macro_rules! impl_oapi_check_iter {
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 for i in self.iter() {
-                    i.oapi_check_inner(root, bread_crumb)?;
+                    i.oapi_check(root, bread_crumb)?;
                 }
                 Ok(())
             }
