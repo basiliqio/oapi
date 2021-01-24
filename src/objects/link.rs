@@ -1,5 +1,4 @@
 use super::*;
-use sppparse::SparsePointer;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
