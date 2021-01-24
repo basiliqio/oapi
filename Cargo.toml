@@ -8,7 +8,7 @@ publish = false
 
 [dependencies]
 # sppparse = "0.1.0"
-sppparse = { version = "0.1.1", git = "ssh://git@gitlab.com/basiliq/sppparse.git",  features = [ "url", "semver" ] }
+sppparse = { version = "0.1.1", git = "https://gitlab.com/basiliq/sppparse.git",  features = [ "url", "semver" ] }
 # sppparse = { version = "0.1.1", path = "../sppparse/sppparse",  features = [ "url", "semver" ] }
 serde = "1"
 getset = "0.1"
