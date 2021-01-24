@@ -1,5 +1,4 @@
-use synstructure;
-
+#![warn(clippy::all)]
 mod check;
 
 use check::oapi_check_derive;
