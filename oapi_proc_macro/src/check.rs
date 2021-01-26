@@ -38,12 +38,13 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 				use crate as sppparse;
 			}
 		});
+    s.add_bounds(synstructure::AddBounds::Both);
 	s.gen_impl(quote! {
 		#oapi_include
 		#sppparse_include
 
 		gen impl oapi::OApiCheckTrait for @Self {
-			fn oapi_check_inner(&self, root: &sppparse::SparseRoot<oapi::OApiDocument>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
+			fn oapi_check_inner(&self, root: &sppparse::SparseRoot<Self::Doc>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
 			{
 				match *self { #body };
 				Ok(())
