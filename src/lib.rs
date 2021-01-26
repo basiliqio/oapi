@@ -11,7 +11,7 @@ use sppparse::{
 use std::collections::HashMap;
 use url::Url;
 
-// mod check;
+mod check;
 mod error;
 mod extensions;
 // mod oapi_root;
@@ -19,9 +19,9 @@ mod document_core;
 mod objects;
 mod operators;
 
-// pub use check::OApiCheck as OApiCheckTrait;
+pub use check::OApiCheckTrait;
 pub use error::OApiError;
-// pub use oapi_proc_macro::OApiCheck;
+pub use oapi_proc_macro::OApiCheck;
 
 // pub use oapi_root::OApi;
 
@@ -31,10 +31,9 @@ pub use extensions::{
     OApiArrayDefaultExtension, OApiCallbackDefaultExtension, OApiComponentsDefaultExtension,
     OApiContactDefaultExtension, OApiDiscriminatorDefaultExtension, OApiDocumentDefaultExtension,
     OApiEncodingDefaultExtension, OApiExampleDefaultExtension, OApiExampleSelectorDefaultExtension,
-    OApiExtensionRequirements, OApiExternalDocDefaultExtension,
-    OApiExternalDocumentationDefaultExtension, OApiHeaderDefaultExtension,
-    OApiInfoDefaultExtension, OApiLicenseDefaultExtension, OApiLinkDefaultExtension,
-    OApiMediaTypeDefaultExtension, OApiNumericDefaultExtension,
+    OApiExternalDocDefaultExtension, OApiExternalDocumentationDefaultExtension,
+    OApiHeaderDefaultExtension, OApiInfoDefaultExtension, OApiLicenseDefaultExtension,
+    OApiLinkDefaultExtension, OApiMediaTypeDefaultExtension, OApiNumericDefaultExtension,
     OApiOauthFlowAuthorizationCodeDefaultExtension, OApiOauthFlowClientCredentialsDefaultExtension,
     OApiOauthFlowDefaultExtension, OApiOauthFlowImplicitDefaultExtension,
     OApiOauthFlowPasswordDefaultExtension, OApiObjectDefaultExtension,

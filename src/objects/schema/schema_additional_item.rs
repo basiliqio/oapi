@@ -36,13 +36,6 @@ impl<ObjectExt, ArrayExt, NumericExt, StringExt, DiscriminatorExt, ExternalDocEx
         DiscriminatorExt,
         ExternalDocExt,
     >
-where
-    ObjectExt: OApiExtensionRequirements,
-    ArrayExt: OApiExtensionRequirements,
-    NumericExt: OApiExtensionRequirements,
-    StringExt: OApiExtensionRequirements,
-    DiscriminatorExt: OApiExtensionRequirements,
-    ExternalDocExt: OApiExtensionRequirements,
 {
     fn default() -> Self {
         OApiSchemaAdditionalItem::Any(false)

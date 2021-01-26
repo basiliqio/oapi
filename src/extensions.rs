@@ -1,17 +1,5 @@
 use super::*;
 
-pub trait OApiExtensionRequirements:
-    'static
-    + Clone
-    + PartialEq
-    + std::fmt::Debug
-    + SparsableTrait
-    + Clone
-    + Default
-    + Serialize
-    + DeserializeOwned // + OApiCheckTrait
-{
-}
 pub type OApiEncodingDefaultExtension = HashMap<String, Value>;
 pub type OApiOauthFlowDefaultExtension = HashMap<String, Value>;
 pub type OApiDocumentDefaultExtension = HashMap<String, Value>;
