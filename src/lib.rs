@@ -1,4 +1,5 @@
 #![warn(clippy::all)]
+#![allow(clippy::type_complexity)]
 
 use getset::Getters;
 use semver::{Version, VersionReq};
