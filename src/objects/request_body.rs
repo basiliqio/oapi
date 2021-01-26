@@ -1,13 +1,41 @@
 use super::*;
 
-#[derive(
-    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, Default, OApiCheck,
-)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-#[serde(default)]
-pub struct OApiRequestBody {
+pub struct OApiRequestBody<
+    RequestExt,
+    MediaTypeExt,
+    ExampleExt,
+    EncodingExt,
+    HeaderExt,
+    ObjectExt,
+    ArrayExt,
+    NumericExt,
+    StringExt,
+    DiscriminatorExt,
+    ExternalDocExt,
+> {
+    #[serde(default)]
     description: Option<String>,
-    content: HashMap<String, OApiMediaType>, // TODO Check that key is a valid media type
+    #[serde(default)]
+    content: HashMap<
+        String,
+        OApiMediaType<
+            MediaTypeExt,
+            ExampleExt,
+            EncodingExt,
+            HeaderExt,
+            ObjectExt,
+            ArrayExt,
+            NumericExt,
+            StringExt,
+            DiscriminatorExt,
+            ExternalDocExt,
+        >,
+    >, // TODO Check that key is a valid media type
+    #[serde(default)]
     required: bool,
+    #[serde(flatten)]
+    extension: RequestExt,
 }

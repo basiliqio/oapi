@@ -9,9 +9,11 @@ pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
 
 #[auto_impl(&mut, Box)]
 pub trait OApiCheck {
+	type Doc: OApiExtensionRequirements;
+
     fn oapi_check(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.oapi_check_inner(root, bread_crumb)
@@ -19,7 +21,7 @@ pub trait OApiCheck {
 
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError>;
 }
@@ -29,7 +31,7 @@ macro_rules! impl_oapi_check_nothing {
         impl OApiCheck for $x {
             fn oapi_check_inner(
                 &self,
-                _root: &SparseRoot<OApiDocument>,
+                _root: &SparseRoot<Self::Doc>,
                 _bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 Ok(())
@@ -41,7 +43,7 @@ macro_rules! impl_oapi_check_nothing {
 impl OApiCheck for Url {
     fn oapi_check_inner(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        _root: &SparseRoot<Self::Doc>,
         _bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         Ok(())
@@ -51,7 +53,7 @@ impl OApiCheck for Url {
 impl OApiCheck for Version {
     fn oapi_check_inner(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        _root: &SparseRoot<Self::Doc>,
         _bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         Ok(())
@@ -64,7 +66,7 @@ where
 {
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
@@ -81,7 +83,7 @@ where
 {
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.val().oapi_check(root, bread_crumb)
@@ -94,7 +96,7 @@ where
 {
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.val().oapi_check(root, bread_crumb)
@@ -107,7 +109,7 @@ where
 {
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
@@ -122,7 +124,7 @@ where
 impl OApiCheck for serde_json::Value {
     fn oapi_check_inner(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        _root: &SparseRoot<Self::Doc>,
         _bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         Ok(())
@@ -135,7 +137,7 @@ where
 {
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
@@ -148,7 +150,7 @@ where
 impl<'a> OApiCheck for &'a str {
     fn oapi_check_inner(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        _root: &SparseRoot<Self::Doc>,
         _bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         Ok(())
@@ -158,7 +160,7 @@ impl<'a> OApiCheck for &'a str {
 impl<'a> OApiCheck for &'a [u8] {
     fn oapi_check_inner(
         &self,
-        _root: &SparseRoot<OApiDocument>,
+        _root: &SparseRoot<Self::Doc>,
         _bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         Ok(())
@@ -171,7 +173,7 @@ where
 {
     fn oapi_check_inner(
         &self,
-        root: &SparseRoot<OApiDocument>,
+        root: &SparseRoot<Self::Doc>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         for i in self.values() {
@@ -189,7 +191,7 @@ macro_rules! impl_oapi_check_iter {
         {
             fn oapi_check_inner(
                 &self,
-                root: &SparseRoot<OApiDocument>,
+                root: &SparseRoot<Self::Doc>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 for i in self.iter() {

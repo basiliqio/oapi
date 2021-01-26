@@ -1,11 +1,13 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiServer {
+pub struct OApiServer<ServerExt, ServerVarExt> {
     url: String,
     description: Option<String>,
     #[serde(default)]
-    variables: HashMap<String, OApiServerVariable>,
+    variables: HashMap<String, OApiServerVariable<ServerVarExt>>,
+    #[serde(flatten)]
+    extension: ServerExt,
 }

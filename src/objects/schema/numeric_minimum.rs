@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable, OApiCheck)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Sparsable)]
 pub enum OApiNumericMinimum {
     #[serde(rename = "minimum")]
     Inclusive(u64),

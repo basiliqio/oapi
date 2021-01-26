@@ -1,15 +1,22 @@
 use super::*;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, OApiCheck)]
+#[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiSchemaNumeric {
-    multiple_of: Option<OperatorSelector<u64>>,
+pub struct OApiSchemaNumeric<NumericExt, DiscriminatorExt, ExternalDocExt> {
+    multiple_of: Option<Option<u64>>,
     #[serde(flatten)]
-    maximum: Option<OperatorSelector<OApiNumericMaximum>>,
+    maximum: Option<OApiNumericMaximum>,
     #[serde(flatten)]
-    minimum: Option<OperatorSelector<OApiNumericMinimum>>,
+    minimum: Option<OApiNumericMinimum>,
     format: Option<OApiNumericFormat>,
+    nullable: Option<OperatorSelector<bool>>,
+    read_only: Option<OperatorSelector<bool>>,
+    write_only: Option<OperatorSelector<bool>>,
+    example: Option<OperatorSelector<Value>>,
+    deprecated: Option<OperatorSelector<bool>>,
+    discriminator: Option<OperatorSelector<OApiDiscriminator<DiscriminatorExt>>>,
+    external_docs: Option<OperatorSelector<OApiExternalDocumentation<ExternalDocExt>>>,
     #[serde(flatten)]
-    common: OApiSchemaCommon,
+    extension: NumericExt,
 }

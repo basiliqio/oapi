@@ -1,9 +1,18 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiHeader {
+pub struct OApiHeader<
+    HeaderExt,
+    ExampleExt,
+    ObjectExt,
+    ArrayExt,
+    NumericExt,
+    StringExt,
+    DiscriminatorExt,
+    ExternalDocExt,
+> {
     description: Option<String>,
     #[serde(default)]
     required: bool,
@@ -16,7 +25,20 @@ pub struct OApiHeader {
     explode: bool,
     #[serde(default)]
     allow_reserved: bool,
-    schema: Option<OperatorSelector<OApiSchema>>,
+    schema: Option<
+        OperatorSelector<
+            OApiSchema<
+                ObjectExt,
+                ArrayExt,
+                NumericExt,
+                StringExt,
+                DiscriminatorExt,
+                ExternalDocExt,
+            >,
+        >,
+    >,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector>,
+    example: Option<OApiExampleSelector<ExampleExt>>,
+    #[serde(flatten)]
+    extension: HeaderExt,
 }

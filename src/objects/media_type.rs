@@ -1,12 +1,49 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Default, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiMediaType {
-    schema: Option<OperatorSelector<OApiSchema>>,
+pub struct OApiMediaType<
+    MediaTypeExt,
+    ExampleExt,
+    EncodingExt,
+    HeaderExt,
+    ObjectExt,
+    ArrayExt,
+    NumericExt,
+    StringExt,
+    DiscriminatorExt,
+    ExternalDocExt,
+> {
+    schema: Option<
+        OperatorSelector<
+            OApiSchema<
+                ObjectExt,
+                ArrayExt,
+                NumericExt,
+                StringExt,
+                DiscriminatorExt,
+                ExternalDocExt,
+            >,
+        >,
+    >,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector>,
+    example: Option<OApiExampleSelector<ExampleExt>>,
     #[serde(default)]
-    encoding: HashMap<String, OApiEncoding>,
+    encoding: HashMap<
+        String,
+        OApiEncoding<
+            EncodingExt,
+            HeaderExt,
+            ExampleExt,
+            ObjectExt,
+            ArrayExt,
+            NumericExt,
+            StringExt,
+            DiscriminatorExt,
+            ExternalDocExt,
+        >,
+    >,
+    #[serde(flatten)]
+    extension: MediaTypeExt,
 }

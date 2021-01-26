@@ -7,7 +7,6 @@ mod numeric_minimum;
 mod schema;
 mod schema_additional_item;
 mod schema_array;
-mod schema_common;
 mod schema_discriminator;
 mod schema_numeric;
 mod schema_object;
@@ -19,7 +18,7 @@ pub use {
     numeric_format::OApiNumericFormat, numeric_maximum::OApiNumericMaximum,
     numeric_minimum::OApiNumericMinimum, schema::OApiSchema,
     schema_additional_item::OApiSchemaAdditionalItem, schema_array::OApiSchemaArray,
-    schema_common::OApiSchemaCommon, schema_discriminator::OApiSchemaDiscriminator,
-    schema_numeric::OApiSchemaNumeric, schema_object::OApiSchemaObject,
-    schema_string::OApiSchemaString, schema_xml::OApiSchemaXml, string_format::OApiStringFormat,
+    schema_discriminator::OApiSchemaDiscriminator, schema_numeric::OApiSchemaNumeric,
+    schema_object::OApiSchemaObject, schema_string::OApiSchemaString, schema_xml::OApiSchemaXml,
+    string_format::OApiStringFormat,
 };

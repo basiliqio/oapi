@@ -1,11 +1,19 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiOAuthFlow {
-    implicit: Option<OApiOAuthFlowImplicit>,
-    password: Option<OApiOAuthFlowPassword>,
-    client_credentials: Option<OApiOAuthFlowClientCredentials>,
-    authorization_code: Option<OApiOAuthFlowAuthorizationCode>,
+pub struct OApiOAuthFlow<
+    OAuthFlowExt,
+    OAuthFlowImplicitExt,
+    OAuthFlowPasswordExt,
+    OAuthFlowClientCredentialsExt,
+    OAuthFlowAuthorizationCodeExt,
+> {
+    implicit: Option<OApiOAuthFlowImplicit<OAuthFlowImplicitExt>>,
+    password: Option<OApiOAuthFlowPassword<OAuthFlowPasswordExt>>,
+    client_credentials: Option<OApiOAuthFlowClientCredentials<OAuthFlowClientCredentialsExt>>,
+    authorization_code: Option<OApiOAuthFlowAuthorizationCode<OAuthFlowAuthorizationCodeExt>>,
+    #[serde(flatten)]
+    extension: OAuthFlowExt,
 }

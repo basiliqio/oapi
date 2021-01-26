@@ -1,13 +1,15 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiInfo {
+pub struct OApiInfo<InfoExt, LicenseExt, ContactExt> {
     title: String,
     description: Option<String>,
     terms_of_services: Option<String>,
-    contact: Option<OApiContact>,
-    license: Option<OApiLicense>,
+    contact: Option<OApiContact<ContactExt>>,
+    license: Option<OApiLicense<LicenseExt>>,
     version: String,
+    #[serde(flatten)]
+    extension: InfoExt,
 }
