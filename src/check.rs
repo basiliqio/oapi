@@ -7,9 +7,7 @@ pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
     res
 }
 
-pub trait OApiCheckRoot: 'static + Sized + SparsableTrait + OApiCheckTrait {}
-
-#[auto_impl(&mut, Box)]
+#[auto_impl(&, &mut, Box)]
 pub trait OApiCheckTrait {
     fn oapi_check(
         &self,
@@ -44,7 +42,7 @@ macro_rules! impl_oapi_check_iter {
     ($x:ident) => {
         impl<T> OApiCheckTrait for $x<T>
         where
-            T: SparsableTrait + OApiCheckTrait,
+            T: OApiCheckTrait,
         {
             fn oapi_check_inner(
                 &self,
@@ -64,7 +62,7 @@ macro_rules! impl_oapi_check_sparse {
     () => {
         impl<T> OApiCheckTrait for SparseSelector<T>
         where
-            T: SparsableTrait + OApiCheckTrait,
+            T: OApiCheckTrait,
         {
             fn oapi_check_inner(
                 &self,
@@ -81,7 +79,7 @@ macro_rules! impl_oapi_check_sparse {
 
         impl<T> OApiCheckTrait for sppparse::SparseRefRaw<T>
         where
-            T: SparsableTrait + OApiCheckTrait,
+            T: OApiCheckTrait,
         {
             fn oapi_check_inner(
                 &self,
@@ -94,7 +92,7 @@ macro_rules! impl_oapi_check_sparse {
 
         impl<T> OApiCheckTrait for sppparse::SparseRef<T>
         where
-            T: SparsableTrait + OApiCheckTrait,
+            T: OApiCheckTrait,
         {
             fn oapi_check_inner(
                 &self,
@@ -107,7 +105,7 @@ macro_rules! impl_oapi_check_sparse {
 
         impl<T> OApiCheckTrait for sppparse::SparsePointedValue<T>
         where
-            T: SparsableTrait + OApiCheckTrait,
+            T: OApiCheckTrait,
         {
             fn oapi_check_inner(
                 &self,
@@ -136,9 +134,26 @@ macro_rules! impl_oapi_check_special_types {
                 Ok(())
             }
         }
+
+        impl<T> OApiCheckTrait for Option<T>
+        where
+            T: OApiCheckTrait,
+        {
+            fn oapi_check_inner(
+                &self,
+                state: &Rc<RefCell<SparseState>>,
+                bread_crumb: &mut Vec<String>,
+            ) -> Result<(), OApiError> {
+                match self {
+                    Some(x) => x.oapi_check(state, bread_crumb),
+                    None => Ok(()),
+                }
+            }
+        }
+
         impl<K, V> OApiCheckTrait for HashMap<K, V>
         where
-            V: SparsableTrait + OApiCheckTrait,
+            V: OApiCheckTrait,
         {
             fn oapi_check_inner(
                 &self,
@@ -158,7 +173,6 @@ macro_rules! impl_oapi_check_special_types {
 macro_rules! impl_oapi_check {
     ($t:tt) => {
         impl_oapi_check_sparse!();
-        impl_oapi_check_special_types!();
         impl_oapi_check_nothing!(bool);
         impl_oapi_check_nothing!(i8);
         impl_oapi_check_nothing!(i16);
@@ -178,6 +192,7 @@ macro_rules! impl_oapi_check {
         impl_oapi_check_nothing!(Url);
         impl_oapi_check_nothing!(Version);
         impl_oapi_check_nothing!(Value);
+        impl_oapi_check_special_types!();
         impl_oapi_check_iter!(Vec);
     };
 }

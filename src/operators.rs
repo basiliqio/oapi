@@ -1,10 +1,7 @@
 use super::*;
 use sppparse::{SparsePointer, SparseValue};
 
-pub trait OApiOperator<
-    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Clone + std::fmt::Debug + PartialEq,
->
-{
+pub trait OApiOperator<T: SparsableTrait + OApiCheckTrait> {
     fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError>;
     fn new(val: Vec<OperatorSelector<T>>) -> Self;
 }
@@ -13,13 +10,7 @@ macro_rules! OApiOperatorImpl {
     ($struct_name:ident) => {
         impl<T> OApiOperator<T> for $struct_name<T>
         where
-            T: 'static
-                + Serialize
-                + DeserializeOwned
-                + SparsableTrait
-                + Clone
-                + std::fmt::Debug
-                + PartialEq,
+            T: 'static + Serialize + DeserializeOwned + SparsableTrait + OApiCheckTrait,
         {
             fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
                 let mut res: Vec<SparseValue<T>> = Vec::new();
@@ -37,28 +28,28 @@ macro_rules! OApiOperatorImpl {
     };
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct AnyOfSelect<T> {
     #[getset(get)]
     #[serde(rename = "anyOf")]
     root: Vec<OperatorSelector<T>>,
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct OneOfSelect<T> {
     #[getset(get)]
     #[serde(rename = "oneOf")]
     root: Vec<OperatorSelector<T>>,
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct AllOfSelect<T> {
     #[getset(get)]
     #[serde(rename = "allOf")]
     root: Vec<OperatorSelector<T>>,
 }
 
-#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct NotSelect<T> {
     #[getset(get)]
     #[serde(rename = "not")]
@@ -82,14 +73,7 @@ pub enum OperatorSelector<T> {
 
 impl<T> std::default::Default for OperatorSelector<T>
 where
-    T: 'static
-        + Serialize
-        + DeserializeOwned
-        + SparsableTrait
-        + Clone
-        + std::fmt::Debug
-        + Default
-        + PartialEq,
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Default + OApiCheckTrait,
 {
     fn default() -> Self {
         OperatorSelector::new_from_val(T::default())
@@ -98,13 +82,7 @@ where
 
 impl<T> OperatorSelector<T>
 where
-    T: 'static
-        + Serialize
-        + DeserializeOwned
-        + SparsableTrait
-        + Clone
-        + std::fmt::Debug
-        + PartialEq,
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + OApiCheckTrait,
 {
     pub fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
         match self {
@@ -123,13 +101,7 @@ where
 
 impl<T> SparsableTrait for OperatorSelector<T>
 where
-    T: 'static
-        + Serialize
-        + DeserializeOwned
-        + SparsableTrait
-        + Clone
-        + std::fmt::Debug
-        + PartialEq,
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait,
 {
     fn sparse_init(
         &mut self,
@@ -148,36 +120,29 @@ where
     }
 }
 
-// impl<T> OApiCheckTrait for OperatorSelector<T>
-// where
-//     T: 'static
-//         + Serialize
-//         + DeserializeOwned
-//         + SparsableTrait
-//         + Clone
-//         + std::fmt::Debug
-//
-//         + PartialEq,
-// {
-//     fn oapi_check_inner(
-//         &self,
-//         root: &SparseRoot<Self::Doc>,
-//         bread_crumb: &mut Vec<String>,
-//     ) -> Result<(), OApiError> {
-//         match self {
-//             OperatorSelector::AnyOf(x) => x.oapi_check(root, bread_crumb),
-//             OperatorSelector::OneOf(x) => x.oapi_check(root, bread_crumb),
-//             OperatorSelector::AllOf(x) => x.oapi_check(root, bread_crumb),
-//             OperatorSelector::Not(x) => x.oapi_check(root, bread_crumb),
-//             OperatorSelector::Val(x) => x.oapi_check(root, bread_crumb),
-//         }
-//     }
+impl<T> OApiCheckTrait for OperatorSelector<T>
+where
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + OApiCheckTrait,
+{
+    fn oapi_check_inner(
+        &self,
+        state: &Rc<RefCell<SparseState>>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        match self {
+            OperatorSelector::AnyOf(x) => x.oapi_check(state, bread_crumb),
+            OperatorSelector::OneOf(x) => x.oapi_check(state, bread_crumb),
+            OperatorSelector::AllOf(x) => x.oapi_check(state, bread_crumb),
+            OperatorSelector::Not(x) => x.oapi_check(state, bread_crumb),
+            OperatorSelector::Val(x) => x.oapi_check(state, bread_crumb),
+        }
+    }
 
-//     fn oapi_check(
-//         &self,
-//         root: &SparseRoot<Self::Doc>,
-//         bread_crumb: &mut Vec<String>,
-//     ) -> Result<(), OApiError> {
-//         self.oapi_check_inner(root, bread_crumb)
-//     }
-// }
+    fn oapi_check(
+        &self,
+        state: &Rc<RefCell<SparseState>>,
+        bread_crumb: &mut Vec<String>,
+    ) -> Result<(), OApiError> {
+        self.oapi_check_inner(state, bread_crumb)
+    }
+}

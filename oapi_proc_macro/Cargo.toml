@@ -12,3 +12,4 @@ synstructure = "0.12"
 proc-macro2 = "1"
 proc-macro-crate = "0.1.5"
 syn = { version = "1", features = ["derive", "parsing"] }
+proc-macro-error = "1.0.4"
