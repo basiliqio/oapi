@@ -5,201 +5,26 @@ use std::collections::HashSet;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 #[oapi(handler = "self._oapi_check")]
-pub struct OApiDocument<
-    DocumentExt,
-    PathItemExt,
-    OperationExt,
-    RequestExt,
-    CallbackExt,
-    TagExt,
-    InfoExt,
-    LicenseExt,
-    ContactExt,
-    ComponentsExt,
-    LinkExt,
-    ServerExt,
-    ServerVarExt,
-    ResponseExt,
-    ParameterExt,
-    ExampleExt,
-    RequestBodyExt,
-    HeaderExt,
-    EncodingExt,
-    MediaTypeExt,
-    SecuritySchemeApiKeyExt,
-    SecuritySchemeHttpExt,
-    SecuritySchemeOauth2Ext,
-    SecuritySchemeOpenIdConnectExt,
-    SecuritySchemeOauth2FlowExt,
-    SecuritySchemeOauth2FlowImplicitExt,
-    SecuritySchemeOauth2FlowPasswordExt,
-    SecuritySchemeOauth2FlowClientCredentialsExt,
-    SecuritySchemeOauth2FlowAuthorizationCodeExt,
-    ObjectExt,
-    ArrayExt,
-    StringExt,
-    NumericExt,
-    DiscriminatorExt,
-    ExternalDocExt,
-> {
+pub struct OApiDocument {
     openapi: Version,
-    info: OApiInfo<InfoExt, LicenseExt, ContactExt>,
+    info: OApiInfo,
     #[serde(default)]
-    servers: Option<Vec<OApiServer<ServerExt, ServerVarExt>>>,
+    servers: Option<Vec<OApiServer>>,
     #[serde(default)]
-    paths: HashMap<
-        String,
-        OApiPathItem<
-            PathItemExt,
-            ParameterExt,
-            ServerExt,
-            ServerVarExt,
-            OperationExt,
-            ExampleExt,
-            MediaTypeExt,
-            HeaderExt,
-            EncodingExt,
-            LinkExt,
-            RequestExt,
-            ResponseExt,
-            CallbackExt,
-            ExternalDocExt,
-            ObjectExt,
-            ArrayExt,
-            NumericExt,
-            StringExt,
-            DiscriminatorExt,
-        >,
-    >,
+    paths: HashMap<String, OApiPathItem>,
     #[serde(default)]
-    components: Option<
-        OApiComponents<
-            ComponentsExt,
-            LinkExt,
-            ServerExt,
-            ServerVarExt,
-            ResponseExt,
-            ParameterExt,
-            ExampleExt,
-            RequestBodyExt,
-            HeaderExt,
-            EncodingExt,
-            MediaTypeExt,
-            SecuritySchemeApiKeyExt,
-            SecuritySchemeHttpExt,
-            SecuritySchemeOauth2Ext,
-            SecuritySchemeOpenIdConnectExt,
-            SecuritySchemeOauth2FlowExt,
-            SecuritySchemeOauth2FlowImplicitExt,
-            SecuritySchemeOauth2FlowPasswordExt,
-            SecuritySchemeOauth2FlowClientCredentialsExt,
-            SecuritySchemeOauth2FlowAuthorizationCodeExt,
-            ObjectExt,
-            ArrayExt,
-            StringExt,
-            NumericExt,
-            DiscriminatorExt,
-            ExternalDocExt,
-        >,
-    >,
+    components: Option<OApiComponents>,
     #[serde(default)]
-    security: HashMap<
-        String,
-        OApiSecurityScheme<
-            SecuritySchemeApiKeyExt,
-            SecuritySchemeHttpExt,
-            SecuritySchemeOauth2Ext,
-            SecuritySchemeOpenIdConnectExt,
-            SecuritySchemeOauth2FlowExt,
-            SecuritySchemeOauth2FlowImplicitExt,
-            SecuritySchemeOauth2FlowPasswordExt,
-            SecuritySchemeOauth2FlowClientCredentialsExt,
-            SecuritySchemeOauth2FlowAuthorizationCodeExt,
-        >,
-    >,
+    security: HashMap<String, OApiSecurityScheme>,
     #[serde(default)]
-    tags: Option<Vec<OApiTag<TagExt, ExternalDocExt>>>,
+    tags: Option<Vec<OApiTag>>,
     #[serde(default)]
-    external_docs: Option<OApiExternalDocumentation<ExternalDocExt>>,
+    external_docs: Option<OApiExternalDocumentation>,
     #[serde(flatten)]
-    extension: DocumentExt,
+    extension: HashMap<String, Value>,
 }
 
-impl<
-        DocumentExt,
-        PathItemExt,
-        OperationExt,
-        RequestExt,
-        CallbackExt,
-        TagExt,
-        InfoExt,
-        LicenseExt,
-        ContactExt,
-        ComponentsExt,
-        LinkExt,
-        ServerExt,
-        ServerVarExt,
-        ResponseExt,
-        ParameterExt,
-        ExampleExt,
-        RequestBodyExt,
-        HeaderExt,
-        EncodingExt,
-        MediaTypeExt,
-        SecuritySchemeApiKeyExt,
-        SecuritySchemeHttpExt,
-        SecuritySchemeOauth2Ext,
-        SecuritySchemeOpenIdConnectExt,
-        SecuritySchemeOauth2FlowExt,
-        SecuritySchemeOauth2FlowImplicitExt,
-        SecuritySchemeOauth2FlowPasswordExt,
-        SecuritySchemeOauth2FlowClientCredentialsExt,
-        SecuritySchemeOauth2FlowAuthorizationCodeExt,
-        ObjectExt,
-        ArrayExt,
-        StringExt,
-        NumericExt,
-        DiscriminatorExt,
-        ExternalDocExt,
-    >
-    OApiDocument<
-        DocumentExt,
-        PathItemExt,
-        OperationExt,
-        RequestExt,
-        CallbackExt,
-        TagExt,
-        InfoExt,
-        LicenseExt,
-        ContactExt,
-        ComponentsExt,
-        LinkExt,
-        ServerExt,
-        ServerVarExt,
-        ResponseExt,
-        ParameterExt,
-        ExampleExt,
-        RequestBodyExt,
-        HeaderExt,
-        EncodingExt,
-        MediaTypeExt,
-        SecuritySchemeApiKeyExt,
-        SecuritySchemeHttpExt,
-        SecuritySchemeOauth2Ext,
-        SecuritySchemeOpenIdConnectExt,
-        SecuritySchemeOauth2FlowExt,
-        SecuritySchemeOauth2FlowImplicitExt,
-        SecuritySchemeOauth2FlowPasswordExt,
-        SecuritySchemeOauth2FlowClientCredentialsExt,
-        SecuritySchemeOauth2FlowAuthorizationCodeExt,
-        ObjectExt,
-        ArrayExt,
-        StringExt,
-        NumericExt,
-        DiscriminatorExt,
-        ExternalDocExt,
-    >
-{
+impl OApiDocument {
     fn check_semver(&self) -> Result<(), OApiError> {
         let version_req: VersionReq = VersionReq::parse("^3.0.0").unwrap();
         if !version_req.matches(&self.openapi) {
@@ -214,18 +39,7 @@ impl<
     fn check_path_parameters_inner(
         bread_crumb: &mut Vec<String>,
         path: &str,
-        parameters: Vec<
-            &OApiParameter<
-                ParameterExt,
-                ExampleExt,
-                ObjectExt,
-                ArrayExt,
-                NumericExt,
-                StringExt,
-                DiscriminatorExt,
-                ExternalDocExt,
-            >,
-        >,
+        parameters: Vec<&OApiParameter>,
     ) -> Result<(), OApiError> {
         let mut uniq: HashSet<(&String, &OApiParameterLocation)> = HashSet::new();
         for param in parameters.into_iter() {
@@ -261,18 +75,7 @@ impl<
     }
     fn check_path_parameters(&self, bread_crumb: &mut Vec<String>) -> Result<(), OApiError> {
         for (path, op) in self.paths().iter() {
-            let mut params: Vec<
-                &OApiParameter<
-                    ParameterExt,
-                    ExampleExt,
-                    ObjectExt,
-                    ArrayExt,
-                    NumericExt,
-                    StringExt,
-                    DiscriminatorExt,
-                    ExternalDocExt,
-                >,
-            > = Vec::new();
+            let mut params: Vec<&OApiParameter> = Vec::new();
             params.extend(op.parameters().iter());
             if let Some(x) = op.get() {
                 params.extend(x.parameters().iter());
@@ -306,28 +109,7 @@ impl<
     fn check_opid<'a, 'b>(
         resp: &'b mut Vec<bool>,
         uniq: &mut HashSet<&'a String>,
-        op: Option<
-            &'a OApiOperation<
-                OperationExt,
-                ParameterExt,
-                ExampleExt,
-                MediaTypeExt,
-                HeaderExt,
-                EncodingExt,
-                LinkExt,
-                RequestExt,
-                ResponseExt,
-                CallbackExt,
-                ServerExt,
-                ServerVarExt,
-                ExternalDocExt,
-                ObjectExt,
-                ArrayExt,
-                NumericExt,
-                StringExt,
-                DiscriminatorExt,
-            >,
-        >,
+        op: Option<&'a OApiOperation>,
     ) {
         if let Some(x) = op {
             if let Some(x) = x.operation_id() {
@@ -338,55 +120,8 @@ impl<
         }
     }
 
-    pub fn get_operation_id(
-        &self,
-        opid_searched: &str,
-    ) -> Option<
-        &OApiOperation<
-            OperationExt,
-            ParameterExt,
-            ExampleExt,
-            MediaTypeExt,
-            HeaderExt,
-            EncodingExt,
-            LinkExt,
-            RequestExt,
-            ResponseExt,
-            CallbackExt,
-            ServerExt,
-            ServerVarExt,
-            ExternalDocExt,
-            ObjectExt,
-            ArrayExt,
-            NumericExt,
-            StringExt,
-            DiscriminatorExt,
-        >,
-    > {
-        let mut opid: Vec<
-            Option<
-                &OApiOperation<
-                    OperationExt,
-                    ParameterExt,
-                    ExampleExt,
-                    MediaTypeExt,
-                    HeaderExt,
-                    EncodingExt,
-                    LinkExt,
-                    RequestExt,
-                    ResponseExt,
-                    CallbackExt,
-                    ServerExt,
-                    ServerVarExt,
-                    ExternalDocExt,
-                    ObjectExt,
-                    ArrayExt,
-                    NumericExt,
-                    StringExt,
-                    DiscriminatorExt,
-                >,
-            >,
-        > = Vec::with_capacity(8);
+    pub fn get_operation_id(&self, opid_searched: &str) -> Option<&OApiOperation> {
+        let mut opid: Vec<Option<&OApiOperation>> = Vec::with_capacity(8);
         for op in self.paths().values() {
             opid.push(op.get().as_ref());
             opid.push(op.head().as_ref());
@@ -411,7 +146,7 @@ impl<
 
     fn _oapi_check(
         &self,
-        root: &Rc<RefCell<SparseState>>,
+        _root: &Rc<RefCell<SparseState>>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.check_semver()?;

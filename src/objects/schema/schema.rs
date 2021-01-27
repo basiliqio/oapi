@@ -2,42 +2,16 @@ use super::*;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable, OApiCheck)]
 #[serde(tag = "type")]
-pub enum OApiSchema<ObjectExt, ArrayExt, NumericExt, StringExt, DiscriminatorExt, ExternalDocExt> {
+pub enum OApiSchema {
     #[serde(rename = "object")]
-    Obj(
-        Box<
-            OperatorSelector<
-                OApiSchemaObject<
-                    ObjectExt,
-                    ArrayExt,
-                    NumericExt,
-                    StringExt,
-                    DiscriminatorExt,
-                    ExternalDocExt,
-                >,
-            >,
-        >,
-    ),
+    Obj(Box<OperatorSelector<OApiSchemaObject>>),
     #[serde(rename = "array")]
-    Array(
-        Box<
-            OperatorSelector<
-                OApiSchemaArray<
-                    ArrayExt,
-                    ObjectExt,
-                    NumericExt,
-                    StringExt,
-                    DiscriminatorExt,
-                    ExternalDocExt,
-                >,
-            >,
-        >,
-    ),
+    Array(Box<OperatorSelector<OApiSchemaArray>>),
     #[serde(rename = "number")]
     #[serde(alias = "integer")]
-    Numeric(Box<OperatorSelector<OApiSchemaNumeric<NumericExt, DiscriminatorExt, ExternalDocExt>>>),
+    Numeric(Box<OperatorSelector<OApiSchemaNumeric>>),
     #[serde(rename = "string")]
-    String(Box<OperatorSelector<OApiSchemaString<StringExt, DiscriminatorExt, ExternalDocExt>>>),
+    String(Box<OperatorSelector<OApiSchemaString>>),
     #[serde(rename = "boolean")]
     Bool,
     #[serde(rename = "null")]

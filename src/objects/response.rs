@@ -3,55 +3,14 @@ use super::*;
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiResponse<
-    ResponseExt,
-    HeaderExt,
-    MediaTypeExt,
-    LinkExt,
-    ExampleExt,
-    EncodingExt,
-    ServerExt,
-    ServerVarExt,
-    ObjectExt,
-    ArrayExt,
-    NumericExt,
-    StringExt,
-    DiscriminatorExt,
-    ExternalDocExt,
-> {
+pub struct OApiResponse {
     description: String,
     #[serde(default)]
-    headers: HashMap<
-        String,
-        OApiHeader<
-            HeaderExt,
-            ExampleExt,
-            ObjectExt,
-            ArrayExt,
-            NumericExt,
-            StringExt,
-            DiscriminatorExt,
-            ExternalDocExt,
-        >,
-    >,
+    headers: HashMap<String, OApiHeader>,
     #[serde(default)]
-    content: HashMap<
-        String,
-        OApiMediaType<
-            MediaTypeExt,
-            ExampleExt,
-            EncodingExt,
-            HeaderExt,
-            ObjectExt,
-            ArrayExt,
-            NumericExt,
-            StringExt,
-            DiscriminatorExt,
-            ExternalDocExt,
-        >,
-    >,
+    content: HashMap<String, OApiMediaType>,
     #[serde(default)]
-    links: HashMap<String, OApiLink<LinkExt, ServerExt, ServerVarExt>>,
+    links: HashMap<String, OApiLink>,
     #[serde(flatten)]
-    extension: ResponseExt,
+    extension: HashMap<String, Value>,
 }

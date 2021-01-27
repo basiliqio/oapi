@@ -3,22 +3,9 @@ use super::*;
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiSecuritySchemeOauth2<
-    SecuritySchemeOauth2Ext,
-    SecuritySchemeOauth2FlowExt,
-    SecuritySchemeOauth2FlowImplicitExt,
-    SecuritySchemeOauth2FlowPasswordExt,
-    SecuritySchemeOauth2FlowClientCredentialsExt,
-    SecuritySchemeOauth2FlowAuthorizationCodeExt,
-> {
+pub struct OApiSecuritySchemeOauth2 {
     description: Option<String>,
-    flows: OApiOAuthFlow<
-        SecuritySchemeOauth2FlowExt,
-        SecuritySchemeOauth2FlowImplicitExt,
-        SecuritySchemeOauth2FlowPasswordExt,
-        SecuritySchemeOauth2FlowClientCredentialsExt,
-        SecuritySchemeOauth2FlowAuthorizationCodeExt,
-    >,
+    flows: OApiOAuthFlow,
     #[serde(flatten)]
-    extension: SecuritySchemeOauth2Ext,
+    extension: HashMap<String, Value>,
 }

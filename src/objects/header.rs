@@ -3,16 +3,7 @@ use super::*;
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiHeader<
-    HeaderExt,
-    ExampleExt,
-    ObjectExt,
-    ArrayExt,
-    NumericExt,
-    StringExt,
-    DiscriminatorExt,
-    ExternalDocExt,
-> {
+pub struct OApiHeader {
     description: Option<String>,
     #[serde(default)]
     required: bool,
@@ -25,20 +16,9 @@ pub struct OApiHeader<
     explode: bool,
     #[serde(default)]
     allow_reserved: bool,
-    schema: Option<
-        OperatorSelector<
-            OApiSchema<
-                ObjectExt,
-                ArrayExt,
-                NumericExt,
-                StringExt,
-                DiscriminatorExt,
-                ExternalDocExt,
-            >,
-        >,
-    >,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector<ExampleExt>>,
+    example: Option<OApiExampleSelector>,
     #[serde(flatten)]
-    extension: HeaderExt,
+    extension: HashMap<String, Value>,
 }

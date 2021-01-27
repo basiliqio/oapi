@@ -5,47 +5,12 @@ use super::*;
 )]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiMediaType<
-    MediaTypeExt,
-    ExampleExt,
-    EncodingExt,
-    HeaderExt,
-    ObjectExt,
-    ArrayExt,
-    NumericExt,
-    StringExt,
-    DiscriminatorExt,
-    ExternalDocExt,
-> {
-    schema: Option<
-        OperatorSelector<
-            OApiSchema<
-                ObjectExt,
-                ArrayExt,
-                NumericExt,
-                StringExt,
-                DiscriminatorExt,
-                ExternalDocExt,
-            >,
-        >,
-    >,
+pub struct OApiMediaType {
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector<ExampleExt>>,
+    example: Option<OApiExampleSelector>,
     #[serde(default)]
-    encoding: HashMap<
-        String,
-        OApiEncoding<
-            EncodingExt,
-            HeaderExt,
-            ExampleExt,
-            ObjectExt,
-            ArrayExt,
-            NumericExt,
-            StringExt,
-            DiscriminatorExt,
-            ExternalDocExt,
-        >,
-    >,
+    encoding: HashMap<String, OApiEncoding>,
     #[serde(flatten)]
-    extension: MediaTypeExt,
+    extension: HashMap<String, Value>,
 }

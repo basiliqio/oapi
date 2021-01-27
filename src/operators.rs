@@ -1,16 +1,25 @@
 use super::*;
 use sppparse::{SparsePointer, SparseValue};
 
-pub trait OApiOperator<T: SparsableTrait + OApiCheckTrait> {
+pub trait OApiOperator<T> {
     fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError>;
     fn new(val: Vec<OperatorSelector<T>>) -> Self;
+}
+
+impl<T, U: OApiOperator<T>> OApiOperator<T> for ::std::boxed::Box<U> {
+    fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
+        U::get(self)
+    }
+    fn new(val: Vec<OperatorSelector<T>>) -> Self {
+        Box::new(U::new(val))
+    }
 }
 
 macro_rules! OApiOperatorImpl {
     ($struct_name:ident) => {
         impl<T> OApiOperator<T> for $struct_name<T>
         where
-            T: 'static + Serialize + DeserializeOwned + SparsableTrait + OApiCheckTrait,
+            T: 'static + Serialize + DeserializeOwned + SparsableTrait,
         {
             fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
                 let mut res: Vec<SparseValue<T>> = Vec::new();
@@ -73,7 +82,7 @@ pub enum OperatorSelector<T> {
 
 impl<T> std::default::Default for OperatorSelector<T>
 where
-    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Default + OApiCheckTrait,
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait + Default,
 {
     fn default() -> Self {
         OperatorSelector::new_from_val(T::default())
@@ -82,7 +91,7 @@ where
 
 impl<T> OperatorSelector<T>
 where
-    T: 'static + Serialize + DeserializeOwned + SparsableTrait + OApiCheckTrait,
+    T: 'static + Serialize + DeserializeOwned + SparsableTrait,
 {
     pub fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
         match self {
@@ -122,7 +131,7 @@ where
 
 impl<T> OApiCheckTrait for OperatorSelector<T>
 where
-    T: 'static + Serialize + DeserializeOwned + SparsableTrait + OApiCheckTrait,
+    T: OApiCheckTrait,
 {
     fn oapi_check_inner(
         &self,

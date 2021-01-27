@@ -1,42 +1,12 @@
 use super::*;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable, OApiCheck)]
-pub enum OApiSchemaAdditionalItem<
-    ObjectExt,
-    ArrayExt,
-    NumericExt,
-    StringExt,
-    DiscriminatorExt,
-    ExternalDocExt,
-> {
+pub enum OApiSchemaAdditionalItem {
     Any(bool),
-    Obj(
-        Box<
-            OperatorSelector<
-                OApiSchema<
-                    ObjectExt,
-                    ArrayExt,
-                    NumericExt,
-                    StringExt,
-                    DiscriminatorExt,
-                    ExternalDocExt,
-                >,
-            >,
-        >,
-    ),
+    Obj(Box<OperatorSelector<OApiSchema>>),
 }
 
-impl<ObjectExt, ArrayExt, NumericExt, StringExt, DiscriminatorExt, ExternalDocExt>
-    std::default::Default
-    for OApiSchemaAdditionalItem<
-        ObjectExt,
-        ArrayExt,
-        NumericExt,
-        StringExt,
-        DiscriminatorExt,
-        ExternalDocExt,
-    >
-{
+impl std::default::Default for OApiSchemaAdditionalItem {
     fn default() -> Self {
         OApiSchemaAdditionalItem::Any(false)
     }

@@ -1,5 +1,4 @@
 #![warn(clippy::all)]
-#![allow(clippy::type_complexity)]
 
 use getset::Getters;
 use semver::{Version, VersionReq};
@@ -17,8 +16,7 @@ use url::Url;
 mod check;
 mod error;
 mod extensions;
-// mod oapi_root;
-mod document_core;
+mod oapi_root;
 mod objects;
 mod operators;
 
@@ -26,9 +24,7 @@ pub use check::OApiCheckTrait;
 pub use error::OApiError;
 pub use oapi_proc_macro::OApiCheck;
 
-// pub use oapi_root::OApi;
-
-pub use document_core::OApiDocumentCore;
+pub use oapi_root::OApi;
 
 pub use extensions::{
     OApiArrayDefaultExtension, OApiCallbackDefaultExtension, OApiComponentsDefaultExtension,

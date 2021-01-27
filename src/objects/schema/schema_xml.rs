@@ -6,12 +6,12 @@ use super::*;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
-pub struct OApiSchemaXml<XmlExt> {
+pub struct OApiSchemaXml {
     name: Option<String>,
     namespace: Option<String>,
     prefix: Option<String>,
     attribute: Option<bool>,
     wrapped: Option<bool>,
     #[serde(flatten)]
-    extension: XmlExt,
+    extension: HashMap<String, Value>,
 }

@@ -3,7 +3,7 @@ use super::*;
 #[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, OApiCheck)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiSchemaString<StringExt, DiscriminatorExt, ExternalDocExt> {
+pub struct OApiSchemaString {
     pattern: Option<String>, //TODO Support regex-
     min_length: Option<u64>,
     max_length: Option<u64>,
@@ -15,8 +15,8 @@ pub struct OApiSchemaString<StringExt, DiscriminatorExt, ExternalDocExt> {
     write_only: Option<OperatorSelector<bool>>,
     example: Option<OperatorSelector<Value>>,
     deprecated: Option<OperatorSelector<bool>>,
-    discriminator: Option<OperatorSelector<OApiDiscriminator<DiscriminatorExt>>>,
-    external_docs: Option<OperatorSelector<OApiExternalDocumentation<ExternalDocExt>>>,
+    discriminator: Option<OperatorSelector<OApiDiscriminator>>,
+    external_docs: Option<OperatorSelector<OApiExternalDocumentation>>,
     #[serde(flatten)]
-    extension: StringExt,
+    extension: HashMap<String, Value>,
 }

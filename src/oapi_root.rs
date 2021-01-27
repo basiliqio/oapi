@@ -9,12 +9,14 @@ pub struct OApi {
 }
 
 impl OApi {
-    pub fn new(doc: SparseRoot<OApiDocument>) -> Self {
-        OApi { doc }
+    pub fn check(&self) -> Result<(), OApiError> {
+        self.doc()
+            .root_get()?
+            .oapi_check(self.doc().state(), &mut vec![])
     }
 
-    pub fn check(&self) -> Result<(), OApiError> {
-        self.doc.root_get()?.oapi_check(self.doc(), &mut vec![])
+    pub fn new(doc: SparseRoot<OApiDocument>) -> Self {
+        OApi { doc }
     }
 }
 

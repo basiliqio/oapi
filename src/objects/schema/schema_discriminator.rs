@@ -6,9 +6,9 @@ use super::*;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
-pub struct OApiSchemaDiscriminator<DiscriminatorExt> {
+pub struct OApiSchemaDiscriminator {
     property_name: String,
     mapping: OperatorSelector<HashMap<String, String>>,
     #[serde(flatten)]
-    extension: DiscriminatorExt,
+    extension: HashMap<String, Value>,
 }

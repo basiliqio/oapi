@@ -3,16 +3,7 @@ use super::*;
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
-pub struct OApiParameter<
-    ParameterExt,
-    ExampleExt,
-    ObjectExt,
-    ArrayExt,
-    NumericExt,
-    StringExt,
-    DiscriminatorExt,
-    ExternalDocExt,
-> {
+pub struct OApiParameter {
     name: String,
     #[serde(rename = "in")]
     in_: OApiParameterLocation,
@@ -27,20 +18,9 @@ pub struct OApiParameter<
     explode: bool,
     #[serde(default)]
     allow_reserved: bool,
-    schema: Option<
-        OperatorSelector<
-            OApiSchema<
-                ObjectExt,
-                ArrayExt,
-                NumericExt,
-                StringExt,
-                DiscriminatorExt,
-                ExternalDocExt,
-            >,
-        >,
-    >,
+    schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
-    example: Option<OApiExampleSelector<ExampleExt>>,
+    example: Option<OApiExampleSelector>,
     #[serde(flatten)]
-    extension: ParameterExt,
+    extension: HashMap<String, Value>,
 }
