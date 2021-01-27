@@ -54,9 +54,9 @@ fn respan_token(mut token: TokenTree, span: Span) -> TokenTree {
 	token
 }
 
-pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenStream {
-	let attribute = find_attr(&s.ast().attrs);
-	let handler = attribute.map(|attribute| {
+fn find_handler(attribute: std::option::Option<syn::MetaList>) -> Option<syn::Lit>
+{
+	attribute.map(|attribute| {
 		let handler: syn::Lit = match attribute.nested[0] {
 			syn::NestedMeta::Meta(syn::Meta::NameValue(ref nv))
 				if nv
@@ -72,8 +72,12 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 			),
 		};
 		handler
-	});
-	let check_body = match handler.clone() {
+	})
+}
+
+fn create_check_body(handler: Option<syn::Lit>) -> TokenStream
+{
+	match handler {
 		Some(handler) => {
 			let ident: TokenStream = match handler
 			{
@@ -94,7 +98,13 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 				self.oapi_check_inner(root, bread_crumb)
 			}
 		}
-	};
+	}
+}
+
+pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenStream {
+	let attribute = find_attr(&s.ast().attrs);
+	let handler = find_handler(attribute);
+	let check_body = create_check_body(handler);
 	let body = s.bind_with(|_bi| BindStyle::Ref).each(|bi| {
 		let bi_string = match &bi.ast().ident {
 			Some(x) => x.to_string(),
