@@ -73,36 +73,36 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 		};
 		handler
 	});
-
+	let check_body = match handler.clone() {
+		Some(handler) => {
+			let ident: TokenStream = match handler
+			{
+				syn::Lit::Str(s) => syn::parse2(
+					respan(
+						syn::parse_str(&s.value())
+						.expect("to parse the function name"), s.span()))
+						.expect("the function name to be valid"),
+				_ => abort!(handler.span(), "The handler function should be a string\ni.e. #[oapi(handler = handler_function)]")
+			};
+			quote! {
+				#ident(root, bread_crumb)?;
+				self.oapi_check_inner(root, bread_crumb)
+			}
+		}
+		None => {
+			quote! {
+				self.oapi_check_inner(root, bread_crumb)
+			}
+		}
+	};
 	let body = s.bind_with(|_bi| BindStyle::Ref).each(|bi| {
 		let bi_string = match &bi.ast().ident {
 			Some(x) => x.to_string(),
 			None => "<unamed>".to_string(),
 		};
-		let fnc_call = match handler.clone() {
-			Some(handler) => {
-				let ident: TokenStream = match handler
-				{
-					syn::Lit::Str(s) => syn::parse2(
-						respan(
-							syn::parse_str(&s.value())
-							.expect("to parse the function name"), s.span()))
-							.expect("the function name to be valid"),
-					_ => abort!(handler.span(), "The handler function should be a string\ni.e. #[oapi(handler = handler_function)]")
-				};
-				quote! {
-					#ident(root, bread_crumb)?;
-				}
-			}
-			None => {
-				quote! {
-					#bi.oapi_check_inner(root, bread_crumb)?;
-				}
-			}
-		};
 		let res = quote! {
 			bread_crumb.push(#bi_string.to_string());
-			#fnc_call
+			#bi.oapi_check(root, bread_crumb)?;
 			bread_crumb.pop();
 		};
 		res
@@ -128,7 +128,11 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 		#sppparse_include
 
 		gen impl oapi::OApiCheckTrait for @Self {
-			fn oapi_check_inner(&self, root: &::std::rc::Rc<::std::cell::RefCell<sppparse::SparseState>>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
+			fn oapi_check(&self, root: &sppparse::SparseRoot<oapi::OApiDocument>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
+			{
+				#check_body
+			}
+			fn oapi_check_inner(&self, root: &sppparse::SparseRoot<oapi::OApiDocument>, bread_crumb: &mut Vec<String>) -> Result<(), oapi::OApiError>
 			{
 				match *self { #body };
 				Ok(())

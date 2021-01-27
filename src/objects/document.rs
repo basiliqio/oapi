@@ -146,7 +146,7 @@ impl OApiDocument {
 
     fn _oapi_check(
         &self,
-        _root: &Rc<RefCell<SparseState>>,
+        _root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.check_semver()?;

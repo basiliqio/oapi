@@ -135,23 +135,23 @@ where
 {
     fn oapi_check_inner(
         &self,
-        state: &Rc<RefCell<SparseState>>,
+        root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         match self {
-            OperatorSelector::AnyOf(x) => x.oapi_check(state, bread_crumb),
-            OperatorSelector::OneOf(x) => x.oapi_check(state, bread_crumb),
-            OperatorSelector::AllOf(x) => x.oapi_check(state, bread_crumb),
-            OperatorSelector::Not(x) => x.oapi_check(state, bread_crumb),
-            OperatorSelector::Val(x) => x.oapi_check(state, bread_crumb),
+            OperatorSelector::AnyOf(x) => x.oapi_check(root, bread_crumb),
+            OperatorSelector::OneOf(x) => x.oapi_check(root, bread_crumb),
+            OperatorSelector::AllOf(x) => x.oapi_check(root, bread_crumb),
+            OperatorSelector::Not(x) => x.oapi_check(root, bread_crumb),
+            OperatorSelector::Val(x) => x.oapi_check(root, bread_crumb),
         }
     }
 
     fn oapi_check(
         &self,
-        state: &Rc<RefCell<SparseState>>,
+        root: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
-        self.oapi_check_inner(state, bread_crumb)
+        self.oapi_check_inner(root, bread_crumb)
     }
 }

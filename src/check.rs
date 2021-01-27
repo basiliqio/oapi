@@ -11,7 +11,7 @@ pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
 pub trait OApiCheckTrait {
     fn oapi_check(
         &self,
-        state: &Rc<RefCell<SparseState>>,
+        state: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError> {
         self.oapi_check_inner(state, bread_crumb)
@@ -19,7 +19,7 @@ pub trait OApiCheckTrait {
 
     fn oapi_check_inner(
         &self,
-        state: &Rc<RefCell<SparseState>>,
+        state: &SparseRoot<OApiDocument>,
         bread_crumb: &mut Vec<String>,
     ) -> Result<(), OApiError>;
 }
@@ -29,7 +29,7 @@ macro_rules! impl_oapi_check_nothing {
         impl OApiCheckTrait for $x {
             fn oapi_check_inner(
                 &self,
-                _state: &Rc<RefCell<SparseState>>,
+                _state: &SparseRoot<OApiDocument>,
                 _bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 Ok(())
@@ -46,7 +46,7 @@ macro_rules! impl_oapi_check_iter {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 for i in self.iter() {
@@ -66,7 +66,7 @@ macro_rules! impl_oapi_check_sparse {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 match self {
@@ -83,7 +83,20 @@ macro_rules! impl_oapi_check_sparse {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
+                bread_crumb: &mut Vec<String>,
+            ) -> Result<(), OApiError> {
+                self.val().oapi_check(state, bread_crumb)
+            }
+        }
+
+        impl<T> OApiCheckTrait for sppparse::SparseRefRawInline<T>
+        where
+            T: OApiCheckTrait,
+        {
+            fn oapi_check_inner(
+                &self,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 self.val().oapi_check(state, bread_crumb)
@@ -96,7 +109,7 @@ macro_rules! impl_oapi_check_sparse {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 self.val().oapi_check(state, bread_crumb)
@@ -109,7 +122,7 @@ macro_rules! impl_oapi_check_sparse {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 match self {
@@ -128,7 +141,7 @@ macro_rules! impl_oapi_check_special_types {
         impl<'a> OApiCheckTrait for &'a [u8] {
             fn oapi_check_inner(
                 &self,
-                _state: &Rc<RefCell<SparseState>>,
+                _state: &SparseRoot<OApiDocument>,
                 _bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 Ok(())
@@ -141,7 +154,7 @@ macro_rules! impl_oapi_check_special_types {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 match self {
@@ -157,7 +170,7 @@ macro_rules! impl_oapi_check_special_types {
         {
             fn oapi_check_inner(
                 &self,
-                state: &Rc<RefCell<SparseState>>,
+                state: &SparseRoot<OApiDocument>,
                 bread_crumb: &mut Vec<String>,
             ) -> Result<(), OApiError> {
                 for i in self.values() {

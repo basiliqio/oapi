@@ -5,12 +5,10 @@ use semver::{Version, VersionReq};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::Value;
 use sppparse::{
-    Sparsable, SparsableTrait, SparseError, SparsePointedValue, SparseRoot, SparseSelector,
-    SparseState,
+    Sparsable, SparsableTrait, SparseError, SparsePointedValue, SparseRefRawInline, SparseRoot,
+    SparseSelector,
 };
-use std::cell::RefCell;
 use std::collections::HashMap;
-use std::rc::Rc;
 use url::Url;
 
 mod check;
