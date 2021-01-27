@@ -1,8 +1,11 @@
 use super::*;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, OApiCheck)]
+#[derive(
+    Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, OApiCheck, Default,
+)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct OApiSchemaString {
     pattern: Option<String>, //TODO Support regex-
     min_length: Option<u64>,

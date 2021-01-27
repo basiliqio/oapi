@@ -6,6 +6,7 @@ use super::*;
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiMediaType {
+    #[serde(default)]
     schema: Option<OperatorSelector<OApiSchema>>,
     #[serde(flatten)]
     example: Option<OApiExampleSelector>,
