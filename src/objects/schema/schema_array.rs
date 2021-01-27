@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(
-    Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, OApiCheck, Default,
+    Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default, OApiCheck,
 )]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
@@ -12,8 +12,6 @@ pub struct OApiSchemaArray {
     min_items: Option<u64>,
     items: Option<OperatorSelector<OApiSchema>>,
     unique_items: bool,
-    // #[serde(flatten)]
-    // common: OApiSchemaCommon<DiscriminatorExt, ExternalDocExt>,
     nullable: Option<OperatorSelector<bool>>,
     read_only: Option<OperatorSelector<bool>>,
     write_only: Option<OperatorSelector<bool>>,
