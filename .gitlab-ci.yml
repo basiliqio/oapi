@@ -20,6 +20,6 @@ build_and_test_rust:
         echo "Running $file";
         mkdir -p "target/cov/$(basename $file)";
         cp $file $(basename $file);
-        kcov "target/cov/$(basename $file)" --exclude-pattern="/.cargo,/usr/lib,$PWD/oapi/src/tests" $(basename $file);
+        kcov "target/cov/$(basename $file)" --exclude-pattern="/.cargo,/usr/lib,$PWD/oapi/src/tests,$PWD/oapi/tests,$PWD/tests" $(basename $file);
       done
     - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -s target/cov
