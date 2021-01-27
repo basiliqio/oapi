@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(
-    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, Default, OApiCheck,
+    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, Default, OApiCheck, OApiExt,
 )]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
@@ -17,5 +17,6 @@ pub struct OApiComponents {
     security_schemes: HashMap<String, OApiSecurityScheme>,
     callbacks: HashMap<String, OApiCallback>,
     #[serde(flatten)]
-    extension: HashMap<String, Value>,
+    #[getset(get)]
+    _extension: HashMap<String, Value>,
 }

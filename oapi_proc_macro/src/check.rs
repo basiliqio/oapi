@@ -5,14 +5,7 @@ use proc_macro_error::abort;
 use quote::quote;
 use syn::spanned::Spanned;
 use synstructure::BindStyle;
-
-fn include_extern_crate(name: &str, new_name: &str) -> proc_macro2::TokenStream {
-	let new_crate_name = syn::Ident::new(new_name, proc_macro2::Span::call_site());
-	let crate_name = syn::Ident::new(name, proc_macro2::Span::call_site());
-	quote! {
-		extern crate #new_crate_name as #crate_name;
-	}
-}
+use crate::utils::include_extern_crate;
 
 // Inspired by https://gitlab.com/torkleyy/err-derive/-/blob/0ee9570a094e0aebc1d62000909213f7609adf31/src/lib.rs#L298
 fn find_attr(attrs: &[syn::Attribute]) -> Option<syn::MetaList> {
@@ -101,7 +94,25 @@ fn create_check_body(handler: Option<syn::Lit>) -> TokenStream
 	}
 }
 
-pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenStream {
+pub fn oapi_check_derive_handler(s: synstructure::Structure) -> proc_macro2::TokenStream
+{
+	let oapi_include = proc_macro_crate::crate_name("oapi")
+	.map(|v| include_extern_crate("oapi", v.as_str()))
+	.unwrap_or_else(|_e| {
+		quote! {
+			use crate as oapi;
+		}
+	});
+	oapi_check_derive(s, oapi_include)
+}
+
+pub fn oapi_check_derive_handler_inner(s: synstructure::Structure) -> proc_macro2::TokenStream
+{
+	let oapi_include = quote! {};
+	oapi_check_derive(s, oapi_include)
+}
+
+fn oapi_check_derive(mut s: synstructure::Structure, include_name: TokenStream) -> proc_macro2::TokenStream {
 	let attribute = find_attr(&s.ast().attrs);
 	let handler = find_handler(attribute);
 	let check_body = create_check_body(handler);
@@ -118,18 +129,12 @@ pub fn oapi_check_derive(mut s: synstructure::Structure) -> proc_macro2::TokenSt
 		res
 	});
 
-	let oapi_include = proc_macro_crate::crate_name("oapi")
-		.map(|v| include_extern_crate("oapi", v.as_str()))
-		.unwrap_or_else(|_e| {
-			quote! {
-				use crate as oapi;
-			}
-		});
+	let oapi_include = include_name;
 	let sppparse_include = proc_macro_crate::crate_name("sppparse")
 		.map(|v| include_extern_crate("sppparse", v.as_str()))
 		.unwrap_or_else(|_e| {
 			quote! {
-				use crate as sppparse;
+				extern crate sppparse;
 			}
 		});
 	s.add_bounds(synstructure::AddBounds::Both);

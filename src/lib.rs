@@ -13,6 +13,7 @@ use url::Url;
 
 mod check;
 mod error;
+mod extension_extractor;
 mod oapi_root;
 mod objects;
 mod operators;
@@ -20,6 +21,9 @@ mod operators;
 pub use check::OApiCheckTrait;
 pub use error::OApiError;
 pub use oapi_proc_macro::OApiCheck;
+use oapi_proc_macro::OApiExt;
+
+pub use extension_extractor::OApiExtensionExtractor;
 
 pub use oapi_root::OApi;
 

@@ -1,6 +1,8 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(
+    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck, OApiExt,
+)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiOAuthFlow {
@@ -9,5 +11,6 @@ pub struct OApiOAuthFlow {
     client_credentials: Option<OApiOAuthFlowClientCredentials>,
     authorization_code: Option<OApiOAuthFlowAuthorizationCode>,
     #[serde(flatten)]
-    extension: HashMap<String, Value>,
+    #[getset(get)]
+    _extension: HashMap<String, Value>,
 }

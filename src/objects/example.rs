@@ -1,6 +1,8 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(
+    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck, OApiExt,
+)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiExample {
@@ -9,5 +11,6 @@ pub struct OApiExample {
     value: Option<Value>,
     external_value: Option<String>,
     #[serde(flatten)]
-    extension: HashMap<String, Value>,
+    #[getset(get)]
+    _extension: HashMap<String, Value>,
 }

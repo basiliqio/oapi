@@ -1,7 +1,7 @@
 use super::*;
 
 #[derive(
-    Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default, OApiCheck,
+    Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default, OApiCheck, OApiExt,
 )]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
@@ -13,5 +13,6 @@ pub struct OApiSchemaXml {
     attribute: Option<bool>,
     wrapped: Option<bool>,
     #[serde(flatten)]
-    extension: HashMap<String, Value>,
+    #[getset(get)]
+    _extension: HashMap<String, Value>,
 }

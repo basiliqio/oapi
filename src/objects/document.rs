@@ -1,7 +1,9 @@
 use super::*;
 use std::collections::HashSet;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(
+    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck, OApiExt,
+)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 #[oapi(handler = "self._oapi_check")]
@@ -21,7 +23,8 @@ pub struct OApiDocument {
     #[serde(default)]
     external_docs: Option<OApiExternalDocumentation>,
     #[serde(flatten)]
-    extension: HashMap<String, Value>,
+    #[getset(get)]
+    _extension: HashMap<String, Value>,
 }
 
 impl OApiDocument {

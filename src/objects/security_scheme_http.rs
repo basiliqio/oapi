@@ -1,6 +1,8 @@
 use super::*;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck)]
+#[derive(
+    Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck, OApiExt,
+)]
 #[getset(get = "pub")]
 #[serde(rename_all = "camelCase")]
 pub struct OApiSecuritySchemeHttp {
@@ -8,5 +10,6 @@ pub struct OApiSecuritySchemeHttp {
     scheme: String,
     bearer_format: Option<String>,
     #[serde(flatten)]
-    extension: HashMap<String, Value>,
+    #[getset(get)]
+    _extension: HashMap<String, Value>,
 }
