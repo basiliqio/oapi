@@ -1,14 +1,21 @@
 use super::*;
 use auto_impl::auto_impl;
 
+/// Connects all the bread crumbs to form a json pointer like string, for debugging
 pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
     let mut res = String::from('/');
     res.push_str(bread_crumb.join("/").as_str());
     res
 }
 
+/// ## Check trait for OApi
+///
+/// This trait allows struct of the OApi crates and extensions to be validated at
+/// runtime for logic errors
 #[auto_impl(&, &mut, Box)]
 pub trait OApiCheckTrait {
+    /// Check the current object, if any checks are to be performed, then checks
+    /// its inner attributes
     fn oapi_check(
         &self,
         state: &SparseRoot<OApiDocument>,
@@ -17,6 +24,7 @@ pub trait OApiCheckTrait {
         self.oapi_check_inner(state, bread_crumb)
     }
 
+    /// Check every inner attributes of the object
     fn oapi_check_inner(
         &self,
         state: &SparseRoot<OApiDocument>,
@@ -202,7 +210,6 @@ macro_rules! impl_oapi_check {
         impl_oapi_check_nothing!(f64);
         impl_oapi_check_nothing!(char);
         impl_oapi_check_nothing!(String);
-        impl_oapi_check_nothing!(Url);
         impl_oapi_check_nothing!(Version);
         impl_oapi_check_nothing!(Value);
         impl_oapi_check_special_types!();

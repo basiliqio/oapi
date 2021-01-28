@@ -9,7 +9,6 @@ use sppparse::{
     SparseSelector,
 };
 use std::collections::HashMap;
-use url::Url;
 
 mod check;
 mod error;
@@ -18,9 +17,17 @@ mod oapi_root;
 mod objects;
 mod operators;
 
+/// ## Derive for OApiCheckTrait
+///
+/// This will apply the OApiCheckTrait for this object and call `oapi_check` on all its attribute.
+///
+/// It can be customized using the `#[oapi(handler = "a_function")]` attribute to call a custom checker.
+///
+/// The default checker returns `Ok(())` by default
+pub use oapi_proc_macro::OApiCheck;
+
 pub use check::OApiCheckTrait;
 pub use error::OApiError;
-pub use oapi_proc_macro::OApiCheck;
 use oapi_proc_macro::OApiExt;
 
 pub use extension_extractor::OApiExtensionExtractor;
@@ -38,9 +45,9 @@ pub use objects::schema::{
 };
 
 pub use objects::{
-    OApiApiKeyLocation, OApiCallback, OApiComponents, OApiContact, OApiDiscriminator, OApiDocument,
-    OApiEncoding, OApiExample, OApiExampleSelector, OApiExternalDocumentation, OApiHeader,
-    OApiInfo, OApiLicense, OApiLink, OApiMediaType, OApiOAuthFlow, OApiOAuthFlowAuthorizationCode,
+    OApiApiKeyLocation, OApiCallback, OApiComponents, OApiContact, OApiDocument, OApiEncoding,
+    OApiExample, OApiExampleSelector, OApiExternalDocumentation, OApiHeader, OApiInfo, OApiLicense,
+    OApiLink, OApiMediaType, OApiOAuthFlow, OApiOAuthFlowAuthorizationCode,
     OApiOAuthFlowClientCredentials, OApiOAuthFlowImplicit, OApiOAuthFlowPassword, OApiOperation,
     OApiParameter, OApiParameterLocation, OApiParameterStyle, OApiPathItem, OApiRequestBody,
     OApiResponse, OApiSecurityScheme, OApiSecuritySchemeApiKey, OApiSecuritySchemeHttp,

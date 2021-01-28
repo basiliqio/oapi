@@ -1,5 +1,6 @@
 use super::*;
 
+/// ## An OpenApi schema
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Sparsable, OApiCheck)]
 #[serde(tag = "type")]
 pub enum OApiSchema {

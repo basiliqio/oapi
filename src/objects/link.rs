@@ -1,5 +1,6 @@
 use super::*;
 
+/// ## The OpenApi [link object](https://swagger.io/specification/#link-object)
 #[derive(
     Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck, OApiExt,
 )]
@@ -7,16 +8,24 @@ use super::*;
 #[serde(rename_all = "camelCase")]
 #[oapi(handler = "self._oapi_check")]
 pub struct OApiLink {
+    /// A description of the link
+    #[serde(default)]
+    description: Option<String>,
+    /// A reference to an operation, may not be defined if `operation_id` is defined
     #[serde(default)]
     operation_ref: Option<SparseRefRawInline<OApiOperation>>,
+    /// The id of an operation, may not be defined if `operation_ref` is defined
     #[serde(default)]
     operation_id: Option<String>,
+    /// Parameters to use for this link
     #[serde(default)]
     parameters: HashMap<String, String>,
+    /// A request body expression to use
     request_body: Option<String>,
-    description: Option<String>,
+    /// A list of server to use as target
     #[serde(default)]
     server: Option<OApiServer>,
+    /// Extensions, if any
     #[serde(flatten)]
     #[getset(get)]
     _extension: HashMap<String, Value>,

@@ -1,7 +1,14 @@
 use super::*;
 
+/// ## Extension extractor trait
+///
+/// This trait allows the inner struct of [OApi](crate) to be able to deserialize
+/// the additional values to extension provided via generics
 pub trait OApiExtensionExtractor {
+    /// Return a map of value of the additionnal keys for that object
     fn oapi_raw_ext(&self) -> &HashMap<String, Value>;
+    /// Try to deserialize to the type `S` the object at `key`, providing the
+    /// root of the document for any SparsePointer dereferencing
     fn oapi_extract_ext<S>(
         &self,
         root: &SparseRoot<OApiDocument>,

@@ -2,6 +2,11 @@ use super::*;
 use std::convert::From;
 use std::ops::Deref;
 
+/// ## OpenApi document
+///
+/// This is the main struct of this crate. It contains a fully parsed OpenApi Document
+/// wrapped in a [SparseRoot](sppparse::SparseRoot) to allow for Sparse Pointer
+/// expansion.
 #[derive(Debug, Getters)]
 #[getset(get = "pub")]
 pub struct OApi {
@@ -9,10 +14,12 @@ pub struct OApi {
 }
 
 impl OApi {
+    /// Check the document for logic errors
     pub fn check(&self) -> Result<(), OApiError> {
         self.doc().root_get()?.oapi_check(self.doc(), &mut vec![])
     }
 
+    /// Create a new [OApi](crate::OApi)
     pub fn new(doc: SparseRoot<OApiDocument>) -> Self {
         OApi { doc }
     }

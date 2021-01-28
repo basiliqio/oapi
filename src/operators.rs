@@ -1,18 +1,15 @@
 use super::*;
 use sppparse::{SparsePointer, SparseValue};
 
+/// ## OApi Operator trait
+///
+/// This trait is implemented by the operators.
+/// The operators allows to aggregate multiple part of a schema to form one.
 pub trait OApiOperator<T> {
+    /// Get the values pointed by the operator
     fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError>;
+    /// Create a operator providing values
     fn new(val: Vec<OperatorSelector<T>>) -> Self;
-}
-
-impl<T, U: OApiOperator<T>> OApiOperator<T> for ::std::boxed::Box<U> {
-    fn get(&self) -> Result<Vec<SparseValue<T>>, SparseError> {
-        U::get(self)
-    }
-    fn new(val: Vec<OperatorSelector<T>>) -> Self {
-        Box::new(U::new(val))
-    }
 }
 
 macro_rules! OApiOperatorImpl {
@@ -37,6 +34,7 @@ macro_rules! OApiOperatorImpl {
     };
 }
 
+/// ## `anyOf` operator
 #[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct AnyOfSelect<T> {
     #[getset(get)]
@@ -44,6 +42,7 @@ pub struct AnyOfSelect<T> {
     root: Vec<OperatorSelector<T>>,
 }
 
+/// ## `oneOf` operator
 #[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct OneOfSelect<T> {
     #[getset(get)]
@@ -51,6 +50,7 @@ pub struct OneOfSelect<T> {
     root: Vec<OperatorSelector<T>>,
 }
 
+/// ## `allOf` operator
 #[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct AllOfSelect<T> {
     #[getset(get)]
@@ -58,6 +58,7 @@ pub struct AllOfSelect<T> {
     root: Vec<OperatorSelector<T>>,
 }
 
+/// ## `not` operator
 #[derive(Serialize, Deserialize, Getters, Sparsable, Clone, Debug, PartialEq, OApiCheck)]
 pub struct NotSelect<T> {
     #[getset(get)]
@@ -70,6 +71,10 @@ OApiOperatorImpl!(OneOfSelect);
 OApiOperatorImpl!(AllOfSelect);
 OApiOperatorImpl!(NotSelect);
 
+/// ## A selector between operator or value
+///
+/// This selector either resolve to an operator, to a reference to the value or to the value.
+/// It's recursive and allows nested objects, operators and references.
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(untagged)]
 pub enum OperatorSelector<T> {

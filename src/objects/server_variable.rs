@@ -1,5 +1,6 @@
 use super::*;
 
+/// ## The OpenApi [server variables](https://swagger.io/specification/#server-variable-object)
 #[derive(
     Debug, PartialEq, Serialize, Deserialize, Clone, Getters, Sparsable, OApiCheck, OApiExt,
 )]
@@ -7,11 +8,15 @@ use super::*;
 #[serde(rename_all = "camelCase")]
 #[oapi(handler = "self._oapi_check")]
 pub struct OApiServerVariable {
+    /// The possible values for the variable
     #[serde(default)]
     #[serde(rename = "enum")]
     enum_: Vec<String>,
+    /// The default value for this variable
     default: String,
+    /// A description of this variable
     description: Option<String>,
+    /// Extensions, if any
     #[serde(flatten)]
     #[getset(get)]
     _extension: HashMap<String, Value>,

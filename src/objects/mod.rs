@@ -4,7 +4,6 @@ mod api_key_location;
 mod callback;
 mod components;
 mod contact;
-mod discriminator;
 mod document;
 mod encoding;
 mod example;
@@ -40,10 +39,10 @@ pub mod schema;
 
 pub use {
     api_key_location::OApiApiKeyLocation, callback::OApiCallback, components::OApiComponents,
-    contact::OApiContact, discriminator::OApiDiscriminator, document::OApiDocument,
-    encoding::OApiEncoding, example::OApiExample, example_selector::OApiExampleSelector,
-    external_documentation::OApiExternalDocumentation, header::OApiHeader, info::OApiInfo,
-    license::OApiLicense, link::OApiLink, media_type::OApiMediaType, oauth_flow::OApiOAuthFlow,
+    contact::OApiContact, document::OApiDocument, encoding::OApiEncoding, example::OApiExample,
+    example_selector::OApiExampleSelector, external_documentation::OApiExternalDocumentation,
+    header::OApiHeader, info::OApiInfo, license::OApiLicense, link::OApiLink,
+    media_type::OApiMediaType, oauth_flow::OApiOAuthFlow,
     oauth_flow_authorization_code::OApiOAuthFlowAuthorizationCode,
     oauth_flow_client_credentials::OApiOAuthFlowClientCredentials,
     oauth_flow_implicit::OApiOAuthFlowImplicit, oauth_flow_password::OApiOAuthFlowPassword,

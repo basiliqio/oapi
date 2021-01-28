@@ -1,5 +1,6 @@
 use super::*;
 
+/// ## The OpenApi [xml object](https://swagger.io/specification/#xml-object)
 #[derive(
     Debug, Clone, Serialize, Deserialize, Getters, PartialEq, Sparsable, Default, OApiCheck, OApiExt,
 )]
@@ -12,6 +13,7 @@ pub struct OApiSchemaXml {
     prefix: Option<String>,
     attribute: Option<bool>,
     wrapped: Option<bool>,
+    /// Extensions, if any
     #[serde(flatten)]
     #[getset(get)]
     _extension: HashMap<String, Value>,
