@@ -1,5 +1,4 @@
 use super::*;
-use auto_impl::auto_impl;
 
 /// Connects all the bread crumbs to form a json pointer like string, for debugging
 pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
@@ -12,7 +11,6 @@ pub fn connect_bread_crumbs(bread_crumb: &[String]) -> String {
 ///
 /// This trait allows struct of the OApi crates and extensions to be validated at
 /// runtime for logic errors
-#[auto_impl(&, &mut, Box)]
 pub trait OApiCheckTrait {
     /// Check the current object, if any checks are to be performed, then checks
     /// its inner attributes
