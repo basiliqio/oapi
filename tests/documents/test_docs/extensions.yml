@@ -47,7 +47,7 @@ paths:
     post:
       summary: Get an existing pet
       description: Get an existing pet by Id
-      operationId: getPet
+      operationId: createPet
       responses:
         '200':
           description: Successful operation

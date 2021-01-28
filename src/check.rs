@@ -188,7 +188,6 @@ macro_rules! impl_oapi_check_special_types {
     };
 }
 
-#[macro_export]
 macro_rules! impl_oapi_check {
     ($t:tt) => {
         impl_oapi_check_sparse!();

@@ -50,23 +50,32 @@ impl OApiDocument {
         Ok(())
     }
 
+    /// Check if the path parameter are duplicated in a list
+    fn check_path_parameter_dup(
+        bread_crumb: &mut Vec<String>,
+        parameters: &[OApiParameter],
+    ) -> Result<(), OApiError> {
+        let mut uniq: HashSet<(&String, &OApiParameterLocation)> = HashSet::new();
+        for param in parameters.iter() {
+            if !uniq.insert((param.name(), param.in_())) {
+                return Err(OApiError::OApiCheck(
+                    crate::check::connect_bread_crumbs(bread_crumb),
+                    format!("Parameters should be unique by name and location. Param `{}` in `{:#?}` is duplicated", param.name(), param.in_()),
+                ));
+            }
+        }
+        Ok(())
+    }
+
     /// Checks the path parameters variables used in this document.
     ///
-    /// - If they're defined, they should be present in the path and vice-versa
-    /// - They should be unique by name and location
+    /// Check if they're defined, they should be present in the path and vice-versa
     fn check_path_parameters_inner(
         bread_crumb: &mut Vec<String>,
         path: &str,
         parameters: Vec<&OApiParameter>,
     ) -> Result<(), OApiError> {
-        let mut uniq: HashSet<(&String, &OApiParameterLocation)> = HashSet::new();
         for param in parameters.into_iter() {
-            if !uniq.insert((param.name(), param.in_())) {
-                return Err(OApiError::OApiCheck(
-                    crate::check::connect_bread_crumbs(bread_crumb),
-                    "Parameters should be unique by name and location".to_string(),
-                ));
-            }
             if let OApiParameterLocation::Path = param.in_() {
                 if !path.contains(format!("{{{}}}", param.name()).as_str()) {
                     bread_crumb.push(path.to_string());
@@ -97,29 +106,38 @@ impl OApiDocument {
     fn check_path_parameters(&self, bread_crumb: &mut Vec<String>) -> Result<(), OApiError> {
         for (path, op) in self.paths().iter() {
             let mut params: Vec<&OApiParameter> = Vec::new();
+            Self::check_path_parameter_dup(bread_crumb, op.parameters())?;
             params.extend(op.parameters().iter());
             if let Some(x) = op.get() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.head() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.options() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.post() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.put() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.patch() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.delete() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             if let Some(x) = op.trace() {
+                Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
                 params.extend(x.parameters().iter());
             }
             Self::check_path_parameters_inner(bread_crumb, path, params)?;

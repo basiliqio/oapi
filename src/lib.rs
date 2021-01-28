@@ -1,3 +1,76 @@
+//! # Simple parsing
+//!
+//! A library to easily parse an OpenApi Document according to specifications.
+//! It allows for distant references and support the OpenApi operators.
+//!
+//! For example, parsing a file in your code might you like the following :
+//!
+//! ```rust
+//! extern crate oapi;
+//! extern crate sppparse;
+//!
+//! use oapi::OApi;
+//! use sppparse::SparseRoot;
+//! use std::path::PathBuf;
+//!
+//! fn main() {
+//!     let doc: OApi = OApi::new(
+//!         SparseRoot::new_from_file(PathBuf::from(concat!(
+//!             env!("CARGO_MANIFEST_DIR"),
+//!             "/tests/documents/test_docs/openapi.yml"
+//!         )))
+//!         .expect("to parse the openapi"),
+//!     );
+//!
+//!     doc.check().expect("not to have logic errors");
+//!     println!("{:#?}", doc);
+//! }
+//! ```
+//!
+//! # Extension support
+//!
+//! You can use extension of the OpenApi Document, as specified in the specifications.
+//!
+//! For example, parsing a file with extension in your code might you like the following :
+//!
+//!
+//! ```rust
+//! extern crate oapi;
+//! extern crate sppparse;
+//!
+//! use oapi::{OApi, OApiExtensionExtractor};
+//! use sppparse::SparseRoot;
+//! use std::path::PathBuf;
+//! use serde::{Serialize, Deserialize};
+//! use sppparse::Sparsable;
+//! use oapi_proc_macro::OApiCheckInner;
+//!
+//! #[derive(Debug, PartialEq, Serialize, Deserialize, Sparsable, OApiCheckInner)]
+//! #[serde(rename_all = "camelCase")]
+//! pub struct OApiDummyExt {
+//!     first_name: String,
+//!     last_name: String,
+//! }
+//!
+//! fn main() {
+//!     let doc: OApi = OApi::new(
+//!         SparseRoot::new_from_file(PathBuf::from(concat!(
+//!             env!("CARGO_MANIFEST_DIR"),
+//!             "/tests/documents/test_docs/extensions.yml"
+//!         )))
+//!         .expect("to parse the openapi"),
+//!     );
+//!
+//!     doc.check().expect("not to have logic errors");
+//!     let ext: OApiDummyExt = doc
+//!         .root_get()
+//!         .unwrap()
+//!         .oapi_extract_ext(doc.doc(), "x-toto")
+//!         .unwrap();
+//!     println!("{:#?}", ext);
+//! }
+//! ```
+
 #![warn(clippy::all)]
 
 use getset::Getters;
