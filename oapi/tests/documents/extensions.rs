@@ -1,6 +1,6 @@
 use super::*;
 use oapi::{OApiError, OApiExtensionExtractor};
-use oapi_proc_macro::OApiCheckInner;
+use oapi_derive::OApiCheckInner;
 use sppparse::Sparsable;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize, Sparsable, OApiCheckInner)]

@@ -1,0 +1,22 @@
+[package]
+name = "oapi"
+version = "0.1.0"
+authors = ["Francis Le Roy <francis.leroy@protonmail.ch>"]
+edition = "2018"
+publish = false
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# sppparse = "0.1.0"
+sppparse = { version = "0.1.1", git = "https://gitlab.com/basiliq/sppparse.git",  features = [ "semver" ] }
+# sppparse = { version = "0.1.1", path = "../sppparse/sppparse",  features = [ "url", "semver" ] }
+serde = "1"
+getset = "0.1"
+serde_json = "1"
+thiserror = "1"
+oapi_derive = { path = "../oapi_derive" }
+semver = { version = "0.11.0", features = [ "serde" ] }
+[dev-dependencies.cargo-husky]
+version = "1"
+default-features = false # Disable features which are enabled by default
+features = ["precommit-hook", "run-cargo-check", "run-cargo-fmt"]

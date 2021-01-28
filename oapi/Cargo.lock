@@ -65,7 +65,7 @@ version = "0.1.0"
 dependencies = [
  "cargo-husky",
  "getset",
- "oapi_derive",
+ "oapi_proc_macro",
  "semver",
  "serde",
  "serde_json",
@@ -74,7 +74,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "oapi_derive"
+name = "oapi_proc_macro"
 version = "0.1.0"
 dependencies = [
  "proc-macro-crate",

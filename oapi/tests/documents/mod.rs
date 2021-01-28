@@ -1,5 +1,5 @@
 extern crate oapi;
-extern crate oapi_proc_macro;
+extern crate oapi_derive;
 
 #[macro_export]
 macro_rules! oapi_test_path {

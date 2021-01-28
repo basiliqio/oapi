@@ -2,7 +2,7 @@ extern crate oapi;
 extern crate sppparse;
 
 use oapi::{OApi, OApiExtensionExtractor};
-use oapi_proc_macro::OApiCheckInner;
+use oapi_derive::OApiCheckInner;
 use serde::{Deserialize, Serialize};
 use sppparse::Sparsable;
 use sppparse::SparseRoot;

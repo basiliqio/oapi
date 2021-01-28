@@ -43,7 +43,7 @@
 //! use std::path::PathBuf;
 //! use serde::{Serialize, Deserialize};
 //! use sppparse::Sparsable;
-//! use oapi_proc_macro::OApiCheckInner;
+//! use oapi_derive::OApiCheckInner;
 //!
 //! #[derive(Debug, PartialEq, Serialize, Deserialize, Sparsable, OApiCheckInner)]
 //! #[serde(rename_all = "camelCase")]
@@ -97,11 +97,11 @@ mod operators;
 /// It can be customized using the `#[oapi(handler = "a_function")]` attribute to call a custom checker.
 ///
 /// The default checker returns `Ok(())` by default
-pub use oapi_proc_macro::OApiCheck;
+pub use oapi_derive::OApiCheck;
 
 pub use check::OApiCheckTrait;
 pub use error::OApiError;
-use oapi_proc_macro::OApiExt;
+use oapi_derive::OApiExt;
 
 pub use extension_extractor::OApiExtensionExtractor;
 
