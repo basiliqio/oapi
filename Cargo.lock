@@ -92,7 +92,7 @@ version = "0.1.0"
 dependencies = [
  "cargo-husky",
  "getset",
- "oapi_derive",
+ "oapi_derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "semver",
  "serde",
  "serde_json",
@@ -103,6 +103,20 @@ dependencies = [
 [[package]]
 name = "oapi_derive"
 version = "0.1.0"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn",
+ "synstructure",
+]
+
+[[package]]
+name = "oapi_derive"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f70f44111e994efc0970e51be4901c96f6a3c5051a1448bd6ee42ca3e4f85d57"
 dependencies = [
  "proc-macro-crate",
  "proc-macro-error",
