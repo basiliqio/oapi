@@ -40,7 +40,7 @@ pub struct OApiPathItem {
     servers: Vec<OApiServer>,
     /// The parameters to use
     #[serde(default)]
-    parameters: Vec<OApiParameter>,
+    parameters: Vec<SparseSelector<OApiParameter>>,
     /// Extensions, if any
     #[serde(flatten)]
     #[getset(get)]

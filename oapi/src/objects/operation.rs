@@ -23,15 +23,15 @@ pub struct OApiOperation {
     operation_id: Option<String>,
     /// Parameters for the operations
     #[serde(default)]
-    parameters: Vec<OApiParameter>,
+    parameters: Vec<SparseSelector<OApiParameter>>,
     /// A request body object
-    request_body: Option<OApiRequestBody>,
+    request_body: Option<SparseSelector<OApiRequestBody>>,
     /// A map of responses
     #[serde(default)]
-    responses: HashMap<String, OApiResponse>,
+    responses: HashMap<String, SparseSelector<OApiResponse>>,
     /// A map of callbacks
     #[serde(default)]
-    callbacks: HashMap<String, OApiCallback>,
+    callbacks: HashMap<String, SparseSelector<OApiCallback>>,
     /// Flag marking an operation as deprecated
     #[serde(default)]
     deprecated: bool,

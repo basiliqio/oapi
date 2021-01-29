@@ -1,5 +1,7 @@
 # OApi
 
+The OpenApi documents parser
+
 <a href="https://gitlab.com/basiliq/oapi/-/pipelines" alt="Gitlab pipeline status">
   <img src="https://img.shields.io/gitlab/pipeline/basiliq/oapi/master">
 </a>
@@ -20,7 +22,6 @@
 	- [Introduction](#introduction)
 	- [Example](#example)
 
-The OpenApi documents parser
 
 
 ## Introduction

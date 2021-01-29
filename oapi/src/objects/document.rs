@@ -1,4 +1,5 @@
 use super::*;
+use sppparse::{SparsePointer, SparseValue};
 use std::collections::HashSet;
 
 /// ## The OpenApi document [root object](https://swagger.io/specification/#openapi-object)
@@ -24,7 +25,7 @@ pub struct OApiDocument {
     components: Option<OApiComponents>,
     /// The security used for this API
     #[serde(default)]
-    security: HashMap<String, OApiSecurityScheme>,
+    security: HashMap<String, SparseSelector<OApiSecurityScheme>>,
     /// Tags used to categorize the operations of this document
     #[serde(default)]
     tags: Option<Vec<OApiTag>>,
@@ -53,10 +54,14 @@ impl OApiDocument {
     /// Check if the path parameter are duplicated in a list
     fn check_path_parameter_dup(
         bread_crumb: &mut Vec<String>,
-        parameters: &[OApiParameter],
+        parameters: &[SparseSelector<OApiParameter>],
     ) -> Result<(), OApiError> {
         let mut uniq: HashSet<(&String, &OApiParameterLocation)> = HashSet::new();
+        let mut tmp_store: Vec<SparseValue<'_, OApiParameter>> = Vec::new();
         for param in parameters.iter() {
+            tmp_store.push(param.get()?);
+        }
+        for param in tmp_store.iter() {
             if !uniq.insert((param.name(), param.in_())) {
                 return Err(OApiError::OApiCheck(
                     crate::check::connect_bread_crumbs(bread_crumb),
@@ -73,9 +78,10 @@ impl OApiDocument {
     fn check_path_parameters_inner(
         bread_crumb: &mut Vec<String>,
         path: &str,
-        parameters: Vec<&OApiParameter>,
+        parameters: Vec<&SparseSelector<OApiParameter>>,
     ) -> Result<(), OApiError> {
         for param in parameters.into_iter() {
+            let param = param.get()?;
             if let OApiParameterLocation::Path = param.in_() {
                 if !path.contains(format!("{{{}}}", param.name()).as_str()) {
                     bread_crumb.push(path.to_string());
@@ -105,8 +111,8 @@ impl OApiDocument {
     /// and check them.
     fn check_path_parameters(&self, bread_crumb: &mut Vec<String>) -> Result<(), OApiError> {
         for (path, op) in self.paths().iter() {
-            let mut params: Vec<&OApiParameter> = Vec::new();
-            Self::check_path_parameter_dup(bread_crumb, op.parameters())?;
+            let mut params: Vec<&SparseSelector<OApiParameter>> = Vec::new();
+            Self::check_path_parameter_dup(bread_crumb, op.parameters().as_slice())?;
             params.extend(op.parameters().iter());
             if let Some(x) = op.get() {
                 Self::check_path_parameter_dup(bread_crumb, x.parameters())?;
