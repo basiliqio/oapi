@@ -5,6 +5,8 @@ authors = ["Francis Le Roy <francis.leroy@protonmail.ch>"]
 edition = "2018"
 license = "MIT"
 readme = "../README.md"
+description = "Derive macro for OApi"
+repository = "https://gitlab.com/basiliq/oapi"
 keywords = ["openapi", "swagger", "parsing", "derive", "proc-macro"]
 
 [lib]
