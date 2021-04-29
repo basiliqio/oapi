@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/basiliq/dockerfiles
+  image: registry.gitlab.com/basiliqio/dockerfiles
 
 variables:
   RUSTFLAGS: -C link-dead-code
