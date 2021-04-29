@@ -92,7 +92,7 @@ version = "0.1.1"
 dependencies = [
  "cargo-husky",
  "getset",
- "oapi_derive 0.1.0",
+ "oapi_derive 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "semver",
  "serde",
  "serde_json",
@@ -102,11 +102,9 @@ dependencies = [
 
 [[package]]
 name = "oapi_derive"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f70f44111e994efc0970e51be4901c96f6a3c5051a1448bd6ee42ca3e4f85d57"
+version = "0.1.1"
 dependencies = [
- "proc-macro-crate 0.1.5",
+ "proc-macro-crate",
  "proc-macro-error",
  "proc-macro2",
  "quote",
@@ -117,8 +115,10 @@ dependencies = [
 [[package]]
 name = "oapi_derive"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae7929c5905edf5f14ed0a47d03bc3283fd3d270742a6469971215d7e9fa43c5"
 dependencies = [
- "proc-macro-crate 1.0.0",
+ "proc-macro-crate",
  "proc-macro-error",
  "proc-macro2",
  "quote",
@@ -183,16 +183,6 @@ version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d6ea3c4595b96363c13943497db34af4460fb474a95c43f4446ad341b8c9785"
 dependencies = [
- "toml",
-]
-
-[[package]]
-name = "proc-macro-crate"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41fdbd1df62156fbc5945f4762632564d7d038153091c3fcf1067f6aef7cff92"
-dependencies = [
- "thiserror",
  "toml",
 ]
 
@@ -381,7 +371,7 @@ version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2475cf69961be356dcb6623ac6c98d85674b9d13ed1630f5ddd10da60c7cb226"
 dependencies = [
- "proc-macro-crate 0.1.5",
+ "proc-macro-crate",
  "proc-macro2",
  "quote",
  "syn",

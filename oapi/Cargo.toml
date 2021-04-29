@@ -15,7 +15,7 @@ serde = "1"
 getset = "0.1"
 serde_json = "1"
 thiserror = "1"
-oapi_derive = "0.1.0"
+oapi_derive = "0.1.1"
 semver = { version = "0.11.0", features = [ "serde" ] }
 [dev-dependencies.cargo-husky]
 version = "1"
