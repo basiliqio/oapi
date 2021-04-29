@@ -1,13 +1,13 @@
 [package]
 name = "oapi"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Francis Le Roy <francis.leroy@protonmail.ch>"]
 edition = "2018"
 license = "MIT"
 readme = "../README.md"
 keywords = ["openapi", "swagger", "parsing"]
 description = "OpenApi document parser"
-repository = "https://gitlab.com/basiliq/oapi"
+repository = "https://github.com/basiliqio/oapi"
 
 [dependencies]
 sppparse = { version = "0.1.2", features = [ "url", "semver" ] }

@@ -1,6 +1,9 @@
 default:
   image: registry.gitlab.com/basiliq/dockerfiles
 
+variables:
+  RUSTFLAGS: -C link-dead-code
+
 stages:
   - test
 

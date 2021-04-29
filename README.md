@@ -1,12 +1,12 @@
 # OApi
 
-The OpenApi documents parser
+An OpenApi documents parser
 
-<a href="https://gitlab.com/basiliq/oapi/-/pipelines" alt="Gitlab pipeline status">
-  <img src="https://img.shields.io/gitlab/pipeline/basiliq/oapi/master">
+<a href="https://gitlab.com/basiliqio/oapi/-/pipelines" alt="Gitlab pipeline status">
+  <img src="https://img.shields.io/gitlab/pipeline/basiliqio/oapi/main">
 </a>
-<a href="https://codecov.io/gl/basiliq/oapi" alt="Codecov">
-  <img src="https://img.shields.io/codecov/c/gitlab/basiliq/oapi?token=20Hr7vtRk4">
+<a href="https://codecov.io/gl/basiliqio/oapi" alt="Codecov">
+  <img src="https://img.shields.io/codecov/c/github/basiliqio/oapi?token=EFJffWYEPp">
 </a>
 <a href="https://crates.io/crates/oapi" alt="Crates.io version">
   <img src="https://img.shields.io/crates/v/oapi">
