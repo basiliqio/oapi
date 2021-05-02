@@ -1,9 +1,9 @@
 [package]
 name = "oapi"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Francis Le Roy <francis.leroy@protonmail.ch>"]
 edition = "2018"
-license = "MIT"
+license = "MIT OR Apache-2.0"
 readme = "../README.md"
 keywords = ["openapi", "swagger", "parsing"]
 description = "OpenApi document parser"
@@ -15,7 +15,7 @@ serde = "1"
 getset = "0.1"
 serde_json = "1"
 thiserror = "1"
-oapi_derive = "0.1.1"
+oapi_derive = "0.1.2"
 semver = { version = "0.11.0", features = [ "serde" ] }
 [dev-dependencies.cargo-husky]
 version = "1"
